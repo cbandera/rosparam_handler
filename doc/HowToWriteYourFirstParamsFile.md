@@ -133,7 +133,7 @@ The last line simply tells the generator to generate the necessary files and exi
 
 NOTE: The third parameter should be equal to the params file name, without extension. Otherwise the libraries will be generated in every build, forcing a recompilation of the nodes which use them.
 
-## Use the cfg File
+## Add params file to CMakeLists
 
 In order to make this params file usable it must be executable, so lets use the following command to make it excecutable
 
@@ -157,8 +157,10 @@ generate_parameter_files(
 add_dependencies(example_node ${PROJECT_NAME}_gencfg) # For dynamic_reconfigure
 add_dependencies(example_node ${PROJECT_NAME}_genparam) # For rosparam_handler
 ```
-Note: You need a node example_node that is already built, before the add_dependencies line is reached (ref Create a node in C++).
+Note: You need a node example_node that is already built, before the add_dependencies line is reached (ref Create a node in C++).  
 
 This will run our params file when the package is built. The last thing to do is to build the package and we're done!
+
+Note: It should be noted here, that you have to pass **all** '.params' **and all** '.cfg' files to the generate_parameter_files call. This is because dynamic_reconfigure can only be called once per package. Your normal cfg files will be passed on together with the newly created cfg files.
 
 For information on how to use the resulting parameter struct in your code, see the next tutorial on [How to use your parameter struct](HowToUseYourParameterStruct.md).
