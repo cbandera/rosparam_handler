@@ -28,8 +28,8 @@ The `rosparam_handler` let's you:
 
 ## Usage
 See the Tutorials on
-- [How to write your first .params file](doc/HowToWriteYourFirstParamsFile)
-- [How to use your parameter struct](doc/HowToUseYourParameterStruct)
+- [How to write your first .params file](doc/HowToWriteYourFirstParamsFile.md)
+- [How to use your parameter struct](doc/HowToUseYourParameterStruct.md)
 
 ## Credits
 This project uses Open Source components. The code was, in large parts, built upon such existing open source software. You can find the source code of their projects along with license information below. We acknowledge and are grateful to these developers for their contributions to open source.

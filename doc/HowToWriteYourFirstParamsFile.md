@@ -161,4 +161,4 @@ Note: You need a node example_node that is already built, before the add_depende
 
 This will run our params file when the package is built. The last thing to do is to build the package and we're done!
 
-For information on how to use the resulting parameter struct in your code, see the next tutorial on [How to use your parameter struct](HowToUseYourParameterStruct).
+For information on how to use the resulting parameter struct in your code, see the next tutorial on [How to use your parameter struct](HowToUseYourParameterStruct.md).

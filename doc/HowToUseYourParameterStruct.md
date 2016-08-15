@@ -3,7 +3,7 @@
 **Tutorial Level**: INTERMEDIATE
 
 ## Generated files
-When creating params files as described in [How to write your first .params file](doc/HowToWriteYourFirstParamsFile), you will end up with the following two files:
+When creating params files as described in [How to write your first .params file](HowToWriteYourFirstParamsFile.md), you will end up with the following two files:
 - *'include/rosparam_tutorials/TutorialParameters.h'*
 - *'include/rosparam_tutorials/TutorialConfig.h'*
 
