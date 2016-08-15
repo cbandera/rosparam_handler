@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>rosparam_handler</name>
+  <version>0.1.0</version>
+  <description>An easy wrapper for using parameters in ROS.</description>
+  <license>BSD</license>
+
+  <maintainer email="cbandera@posteo.de">Claudio Bandera</maintainer>
+  <author email="cbandera@posteo.de">Claudio Bandera</author>
+  <url type="repository">https://github.com/cbandera/rosparam_handler.git</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>catkin</run_depend>
+
+</package>
+
