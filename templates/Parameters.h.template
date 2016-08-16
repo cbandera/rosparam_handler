@@ -58,6 +58,7 @@ std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
 struct ${ClassName}Parameters {
 
 private:
+  const std::string globalNamespace;
   const std::string privateNamespace;
   const std::string nodeName;
 
@@ -67,13 +68,14 @@ $parameters
 
   ${ClassName}Parameters(const ros::NodeHandle& private_node_handle)
   : privateNamespace{private_node_handle.getNamespace() + "/"},
-    nodeName{getNodeName(private_node_handle)} {}
+    nodeName{getNodeName(private_node_handle)},
+    globalNamespace{"/"} {}
 
   void fromParamServer(){
 $fromParamServer
 
 $test_limits
-    debugOutput();
+  ROS_DEBUG_STREAM(*this);
   }
 
   void fromConfig(const ${ClassName}Config& config){
@@ -85,9 +87,11 @@ $fromConfig
 #endif
   }
 
-  void debugOutput(){
-    ROS_DEBUG_STREAM("[" << nodeName << "]\nNode " << nodeName << " has the following parameters:\n"
-$debug_output    );
+  friend std::ostream& operator<<(std::ostream& os, const MyTestParameters& p)
+  {
+    os << "[" << p.nodeName << "]\nNode " << p.nodeName << " has the following parameters:\n"
+$string_representation;
+    return os;
   }
 
   void missingParamsWarning(){

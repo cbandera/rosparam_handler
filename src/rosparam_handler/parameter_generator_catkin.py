@@ -317,7 +317,7 @@ class ParameterGenerator(object):
             template = f.read()
 
         param_entries = []
-        debug_output = []
+        string_representation = []
         from_server = []
         non_default_params = []
         from_config = []
@@ -329,7 +329,7 @@ class ParameterGenerator(object):
 
             # Adjust key for parameter server
             if param["global_scope"]:
-                namespace = 'std::string("/")'
+                namespace = 'globalNamespace'
             else:
                 namespace = 'privateNamespace'
             full_name = '{} + "{}"'.format(namespace, param["name"])
@@ -369,11 +369,11 @@ class ParameterGenerator(object):
                     paramname=full_name, name=name, max=param['max'], type=param['type']))
 
             # Add debug output
-            debug_output.append(Template('      << "\t" << $namespace << "$name:" << $name << '
+            string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
                                          '"\\n"\n').substitute(namespace=namespace, name=name))
 
         param_entries = "\n".join(param_entries)
-        debug_output = "".join(debug_output)
+        string_representation = "".join(string_representation)
         non_default_params = "".join(non_default_params)
         from_server = "\n".join(from_server)
         from_config = "\n".join(from_config)
@@ -381,7 +381,7 @@ class ParameterGenerator(object):
 
         content = Template(template).substitute(pkgname=self.pkgname, ClassName=self.classname,
                                                 parameters=param_entries, fromConfig=from_config,
-                                                fromParamServer=from_server, debug_output=debug_output,
+                                                fromParamServer=from_server, string_representation=string_representation,
                                                 non_default_params=non_default_params, nodename=self.nodename,
                                                 test_limits=test_limits)
 
