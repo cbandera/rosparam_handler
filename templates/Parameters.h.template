@@ -87,7 +87,7 @@ $fromConfig
 #endif
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const MyTestParameters& p)
+  friend std::ostream& operator<<(std::ostream& os, const ${ClassName}Parameters& p)
   {
     os << "[" << p.nodeName << "]\nNode " << p.nodeName << " has the following parameters:\n"
 $string_representation;
