@@ -12,6 +12,7 @@
 #include <string>
 #include <limits>
 #include <ros/param.h>
+#include <ros/node_handle.h>
 #ifdef DYNAMIC_RECONFIGURE_FOUND
 #include <${pkgname}/${ClassName}Config.h>
 #else
