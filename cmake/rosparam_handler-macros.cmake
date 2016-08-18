@@ -21,7 +21,7 @@ macro(generate_parameter_files)
         endif ()
 
         get_filename_component(_cfgext ${_cfg} EXT)
-        if( _cfgext STREQUAL ".params" )
+        if( _cfgext STREQUAL ".params" OR _cfgext STREQUAL ".mrtcfg")
             # Define required input files
             set(genparam_build_files
                     ${ROSPARAM_HANDLER_ROOT_DIR}/templates/ConfigType.h.template
