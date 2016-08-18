@@ -52,8 +52,8 @@ class ParameterGenerator(object):
         self.parameters = []
 
         if len(sys.argv) != 4:
-            print("Unexpected amount of args")
-            sys.exit(1)
+            eprint("ParameterGenerator: Unexpected amount of args, did you try to call this directly? You shouldn't do this!")
+
         self.dynconfpath = sys.argv[1]
         self.share_dir = sys.argv[2]
         self.cpp_gen_dir = sys.argv[3]
