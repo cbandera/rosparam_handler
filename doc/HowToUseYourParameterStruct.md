@@ -51,3 +51,5 @@ void reconfigureRequest(TutorialConfig& config, uint32_t level) {
 }
 ```
 This will update all values that were specified as configurable. At the same time, it assures that all dynamic_reconfigure parameters live in the same namespace as those on the parameter server to avoid problems with redundant parameters.
+
+You can find a running version of this example code in the [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)-Repository

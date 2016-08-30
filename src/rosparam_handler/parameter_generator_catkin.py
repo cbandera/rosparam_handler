@@ -157,7 +157,9 @@ class ParameterGenerator(object):
             eprint(param['name'],"Constant parameters need a default value!")
         if param['name'] in [p['name'] for p in self.parameters]:
             eprint(param['name'],"Parameter with the same name exists already")
-        if param['edit_method'] != '""':
+        if param['edit_method'] == '':
+            param['edit_method'] = '""'
+        elif param['edit_method'] != '""':
             param['configurable'] = True
 
         # Check type

@@ -27,7 +27,7 @@ Add the following to your Tutorials.params file:
 05:	# Parameters with different types
 06:	gen.add("int_param", paramtype="int", description="An Integer parameter")
 07:	gen.add("double_param", paramtype="double",description="A double parameter")
-08:	gen.add("str_param", paramtype="std::string", description="A string parameter",  "Hello World")
+08:	gen.add("str_param", paramtype="std::string", description="A string parameter",  default="Hello World")
 09:	gen.add("bool_param", paramtype="bool", description="A Boolean parameter")
 10:	gen.add("vector_param", paramtype="std::vector<double>", description="A vector parameter")
 11:	gen.add("map_param", paramtype="std::map<std::string,std::string>", description="A map parameter")
@@ -39,7 +39,7 @@ Add the following to your Tutorials.params file:
 17:
 18:	# Constant and configurable parameters
 19:	gen.add("optimal_parameter", paramtype="double", description="Optimal parameter, can not be set via rosparam", default=10, constant=True)
-20:	gen.add("configurable_parameter", paramtype="double", description="This parameter can be set via dynamic_reconfigure", configurable_parameter=True)
+20:	gen.add("configurable_parameter", paramtype="double", description="This parameter can be set via dynamic_reconfigure", configurable=True)
 21:
 22:	# Defining the namespace
 23:	gen.add("global_parameter", paramtype="std::string", description="This parameter is defined in the global namespace", global_scope=True)
