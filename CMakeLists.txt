@@ -6,6 +6,7 @@ find_package(catkin REQUIRED)
 catkin_python_setup()
 
 catkin_package(
+        INCLUDE_DIRS include
         CATKIN_DEPENDS catkin
         CFG_EXTRAS rosparam_handler-extras.cmake
 )
