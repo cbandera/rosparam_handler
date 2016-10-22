@@ -147,7 +147,7 @@ Next we need to add the following lines to our CMakeLists.txt.
 #add rosparam_handler api
 find_package(catkin REQUIRED rosparam_handler dynamic_reconfigure)
 
-generate_parameter_files(
+generate_ros_parameter_files(
   cfg/Tutorials.params
   cfg/SomeOtherCfgFile.cfg
   #...
