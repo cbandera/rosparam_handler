@@ -54,18 +54,9 @@ std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
   return stream;
 }
 
-
-
 struct ${ClassName}Parameters {
 
-private:
-  const std::string globalNamespace;
-  const std::string privateNamespace;
-  const std::string nodeName;
-
-public:
-$parameters
-
+  using Config = ${ClassName}Config;
 
   ${ClassName}Parameters(const ros::NodeHandle& private_node_handle)
   : privateNamespace{private_node_handle.getNamespace() + "/"},
@@ -79,7 +70,7 @@ $test_limits
   ROS_DEBUG_STREAM(*this);
   }
 
-  void fromConfig(const ${ClassName}Config& config){
+  void fromConfig(const Config& config, const uint32_t level = 0){
 #ifdef DYNAMIC_RECONFIGURE_FOUND
 $fromConfig
 #else
@@ -145,6 +136,12 @@ $non_default_params    );
     }
   }
 
+  $parameters
+
+  private:
+    const std::string globalNamespace;
+    const std::string privateNamespace;
+    const std::string nodeName;
 };
 
 } // namespace ${pkgname}
