@@ -22,6 +22,8 @@ struct ${ClassName}Config{};
 
 namespace ${pkgname} {
 
+#ifndef UTIL_FUNCTIONS_${pkgname}
+#define UTIL_FUNCTIONS_${pkgname}
 inline std::string getNodeName(const ros::NodeHandle& privateNodeHandle){
     std::string name_space = privateNodeHandle.getNamespace();
     std::stringstream tempString(name_space);
@@ -53,6 +55,8 @@ std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
   stream << '}';
   return stream;
 }
+
+#endif /* UTIL_FUNCTIONS_${pkgname} */
 
 struct ${ClassName}Parameters {
 
