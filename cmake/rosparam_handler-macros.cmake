@@ -1,5 +1,11 @@
 
 macro(generate_ros_parameter_files)
+
+    #Require C++11
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
     set(CFG_FILES "${ARGN}")
     set(ROSPARAM_HANDLER_ROOT_DIR "${ROSPARAM_HANDLER_CMAKE_DIR}/..")
     if (${PROJECT_NAME}_CATKIN_PACKAGE)

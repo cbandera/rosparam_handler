@@ -141,20 +141,29 @@ class ParameterGenerator(object):
         """
 
         if param['type'].strip() == "std::string" and (param['max'] is not None or param['min'] is not None):
-            eprint(param['name'],"Max or min specified for for variable of type string")
-        if (param['is_vector'] or param['is_map']) and (param['max'] or param['min'] or param['default']):
-            eprint(param['name'],"Max, min and default can not be specified for variable of type %s" % param['type'])
+            eprint(param['name'], "Max or min specified for for variable of type string")
+
+        in_type = param['type'].strip()
+        if in_type.startswith('std::vector'):
+            param['is_vector'] = True
+        if in_type.startswith('std::map'):
+            param['is_map'] = True
+
+        if (param['is_vector'] or param['is_map']):
+            if (param['max'] is not None or param['min'] is not None):
+                eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+
         pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
         if not re.match(pattern, param['name']):
-            eprint(param['name'],"The name of field does not follow the ROS naming conventions, "
-                                 "see http://wiki.ros.org/ROS/Patterns/Conventions")
+            eprint(param['name'], "The name of field does not follow the ROS naming conventions, "
+                   "see http://wiki.ros.org/ROS/Patterns/Conventions")
         if param['configurable'] and (
-                            param['global_scope'] or param['is_vector'] or param['is_map'] or param['constant']):
-            eprint(param['name'],"Global Parameters, vectors, maps and constant params can not be declared configurable! ")
+           param['global_scope'] or param['is_vector'] or param['is_map'] or param['constant']):
+            eprint(param['name'], "Global Parameters, vectors, maps and constant params can not be declared configurable! ")
         if param['global_scope'] and param['default'] is not None:
-            eprint(param['name'],"Default values for global parameters should not be specified in node! ")
+            eprint(param['name'], "Default values for global parameters should not be specified in node! ")
         if param['constant'] and param['default'] is None:
-            eprint(param['name'],"Constant parameters need a default value!")
+            eprint(param['name'], "Constant parameters need a default value!")
         if param['name'] in [p['name'] for p in self.parameters]:
             eprint(param['name'],"Parameter with the same name exists already")
         if param['edit_method'] == '':
@@ -163,23 +172,20 @@ class ParameterGenerator(object):
             param['configurable'] = True
 
         # Check type
-        in_type = param['type'].strip()
-        if in_type.startswith('std::vector'):
-            param['is_vector'] = True
+        if param['is_vector']:
             ptype = in_type[12:-1].strip()
             self._test_primitive_type(param['name'], ptype)
             param['type'] = 'std::vector<{}>'.format(ptype)
-        elif in_type.startswith('std::map'):
-            param['is_map'] = True
+        elif param['is_map']:
             ptype = in_type[9:-1].split(',')
             if len(ptype) != 2:
-                eprint(param['name'],"Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
-                                "parameter %s" % in_type)
+                eprint(param['name'], "Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
+                       "parameter %s" % in_type)
             ptype[0] = ptype[0].strip()
             ptype[1] = ptype[1].strip()
             if ptype[0] != "std::string":
-                eprint(param['name'],"Can not setup map with %s as key type. Only std::map<std::string, "
-                                     "...> are allowed" % ptype[0])
+                eprint(param['name'], "Can not setup map with %s as key type. Only std::map<std::string, "
+                       "...> are allowed" % ptype[0])
             self._test_primitive_type(param['name'], ptype[0])
             self._test_primitive_type(param['name'], ptype[1])
             param['type'] = 'std::map<{},{}>'.format(ptype[0], ptype[1])
@@ -232,6 +238,48 @@ class ParameterGenerator(object):
         elif param['type'] == 'bool':
             value = str(param[field]).capitalize()
         return str(value)
+
+    @staticmethod
+    def _get_cvaluelist(param, field):
+        """
+        Helper function to convert python list of strings and booleans to correct C++ syntax
+        :param param:
+        :return: C++ compatible representation
+        """
+        values = param[field]
+        assert(isinstance(values, list))
+        form = ""
+        for value in values:
+            if param['type'] == 'std::vector<std::string>':
+                value = '"{}"'.format(value)
+            elif param['type'] == 'std::vector<bool>':
+                value = str(value).lower()
+            else:
+                value = str(value)
+            form += value + ','
+        # remove last ','
+        return form[:-1]
+
+    @staticmethod
+    def _get_cvaluedict(param, field):
+        """
+        Helper function to convert python dict of strings and booleans to correct C++ syntax
+        :param param:
+        :return: C++ compatible representation
+        """
+        values = param[field]
+        assert(isinstance(values, dict))
+        form = ""
+        for key, value in values.items():
+            if param['type'] == 'std::map<std::string,std::string>':
+                pair = '{{"{}","{}"}}'.format(key, value)
+            elif param['type'] == 'std::map<std::string,bool>':
+                pair = '{{"{}",{}}}'.format(key, str(value).lower())
+            else:
+                pair = '{{"{}",{}}}'.format(key, str(value))
+            form += pair + ','
+        # remove last ','
+        return form[:-1]
 
     def generate(self, pkgname, nodename, classname):
         """
@@ -343,7 +391,12 @@ class ParameterGenerator(object):
                                                    '\\n"\n').substitute(
                     namespace=namespace, name=name, type=param["type"]))
             else:
-                default = ', {}'.format(str(param['type']) + "{" + self._get_cvalue(param, "default") + "}")
+                if param['is_vector']:
+                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvaluelist(param, "default") + "}")
+                elif param['is_map']:
+                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvaluedict(param, "default") + "}")
+                else:
+                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvalue(param, "default") + "}")
 
             # Test for constant value
             if param['constant']:
