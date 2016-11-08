@@ -150,7 +150,7 @@ class ParameterGenerator(object):
             param['is_map'] = True
 
         if (param['is_vector'] or param['is_map']):
-            if (param['max'] or param['min']):
+            if (param['max'] is not None or param['min'] is not None):
                 eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
 
         pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
