@@ -1,17 +1,10 @@
 
 macro(generate_ros_parameter_files)
 
-    set(CMAKE_CPP11_FLAG_ENABLED FALSE)
+    #Require C++11
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-    foreach (flag ${CMAKE_CXX_FLAGS})
-      if (flag MATCHES "-std=c\\+\\+0x|-std=c\\+\\+11")
-        set (CMAKE_CPP11_FLAG_ENABLED TRUE)
-      endif ()
-    endforeach (flag)
-
-    if (NOT CMAKE_CPP11_FLAG_ENABLED)
-      message(SEND_ERROR "cpp11 support is required and is not enabled! (e.g. -std=c++11)")
-    endif()
 
     set(CFG_FILES "${ARGN}")
     set(ROSPARAM_HANDLER_ROOT_DIR "${ROSPARAM_HANDLER_CMAKE_DIR}/..")
