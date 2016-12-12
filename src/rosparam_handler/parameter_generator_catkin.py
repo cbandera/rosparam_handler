@@ -472,15 +472,14 @@ class ParameterGenerator(object):
                 parent=self.parent.group_variable))
 
         for enum in self.enums:
-            param_entries.append(Template("$name = $group_variable.enum([").substitute(
-                group_variable=self.group_variable,
+            param_entries.append(Template("$name = gen.enum([").substitute(
                 name=enum['name'],
                 parent=self.group))
             i = 0
             for value in enum['values']:
                 param_entries.append(
-                    Template("    $group_variable.const(name='$name', type='$type', value=$value, descr='$descr'),")
-                        .substitute(group_variable=self.group_variable, name=value, type="int", value=i, descr=""))
+                    Template("    gen.const(name='$name', type='$type', value=$value, descr='$descr'),")
+                        .substitute(name=value, type="int", value=i, descr=""))
                 i += 1
             param_entries.append(Template("    ], '$description')").substitute(description=enum["description"]))
 
