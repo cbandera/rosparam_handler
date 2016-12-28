@@ -58,12 +58,13 @@ class ParameterGenerator(object):
             self.group = "gen"
         self.group_variable = filter(str.isalnum, self.group)
 
-        if len(sys.argv) != 4:
+        if len(sys.argv) != 5:
             eprint("ParameterGenerator: Unexpected amount of args, did you try to call this directly? You shouldn't do this!")
 
         self.dynconfpath = sys.argv[1]
         self.share_dir = sys.argv[2]
         self.cpp_gen_dir = sys.argv[3]
+        self.py_gen_dir = sys.argv[4]
 
         self.pkgname = None
         self.nodename = None
@@ -93,7 +94,7 @@ class ParameterGenerator(object):
 
         entry_strings = [str(e) for e in entry_strings]  # Make sure we only get strings
         if default is None:
-            default = entry_strings[0]
+            default = 0
         else:
             default = entry_strings.index(default)
         self.add(name=name, paramtype="int", description=description, edit_method=name, default=default,
@@ -330,6 +331,7 @@ class ParameterGenerator(object):
 
         self._generatecfg()
         self._generatecpp()
+        self._generatepy()
 
         return 0
 
@@ -457,6 +459,33 @@ class ParameterGenerator(object):
             # Stupid error, sometimes the directory exists anyway
             pass
         with open(header_file, 'w') as f:
+            f.write(content)
+
+    def _generatepy(self):
+        """
+        Generate Python parameter file
+        :param self:
+        :return:
+        """
+        params = self._get_parameters()
+        paramDescription = str(params)
+        
+        # Read in template file
+        templatefile = os.path.join(self.dynconfpath, "templates", "Parameters.py.template")
+        with open(templatefile, 'r') as f:
+            template = f.read()
+
+        content = Template(template).substitute(pkgname=self.pkgname, ClassName=self.classname,
+                                                paramDescription=paramDescription)
+
+        py_file = os.path.join(self.py_gen_dir, "param", self.classname + "Parameters.py")
+        try:
+            if not os.path.exists(os.path.dirname(py_file)):
+                os.makedirs(os.path.dirname(py_file))
+        except OSError:
+            # Stupid error, sometimes the directory exists anyway
+            pass
+        with open(py_file, 'w') as f:
             f.write(content)
 
     def _get_parameters(self):
