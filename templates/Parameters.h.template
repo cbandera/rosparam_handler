@@ -122,6 +122,8 @@ $non_default_params    );
   void getParam(const std::string key, T& val, const T& defaultValue) {
     if (!ros::param::has(key)) {
         val = defaultValue;
+        ros::param::set(key, defaultValue);
+        ROS_INFO_STREAM("Parameter "<<key<<" is not yet set. Setting default value.");
     } else if (!ros::param::get(key, val)) {
         ROS_WARN_STREAM("Parameter "<<key<<" is set, but has a different type. Using default value instead.");
         val = defaultValue;
