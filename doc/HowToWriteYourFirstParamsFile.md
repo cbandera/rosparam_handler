@@ -56,6 +56,10 @@ global_scope=False, constant=False)
 gen.add_enum("my_enum", description="My first self written enum",
 entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium"))
 
+# Add a subgroup
+my_group = gen.add_group("my_group")
+my_group.add("subparam", paramtype="std::string", description="This parameter is part of a group", configurable=True)
+
 #Syntax : Package, Node, Config Name(The final name will be MyDummyConfig)
 exit(gen.generate("rosparam_tutorials", "example_node", "Tutorial"))
 ```
@@ -126,7 +130,15 @@ gen.add_enum("my_enum", description="My first self written enum",
 entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium"))
 ```
 
-Finally, by using the add_enum function, an enum for the dynamic_reconfigure window can be easily defined. The entry_strings will also be static parameters of the resulting parameter struct.
+By using the add_enum function, an enum for the dynamic_reconfigure window can be easily defined. The entry_strings will also be static parameters of the resulting parameter struct.
+
+```python
+# Add a subgroup
+my_group = gen.add_group("my_group")
+my_group.add("subparam", paramtype="std::string", description="This parameter is part of a group", configurable=True)
+```
+
+Finally, by using the add_group function, you can sort parameters into groups in the dynamic_reconfigure window. This obviously only makes sense for configurable parameters.
 
 ```python
 exit(gen.generate("rosparam_tutorials", "example_node", "Tutorial"))
