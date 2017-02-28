@@ -38,7 +38,7 @@ gen.add("age", paramtype="int",description="Normal age of a human is inbetween 0
 gen.add("default_param", paramtype="std::string",description="Parameter with default value", default="Hello World")
 # Default vector/map
 gen.add("vector_bool", paramtype="std::vector<bool>", description="A vector of boolean with default value.", default=[False, True, True, False, True])
-gen.add("map_string_float", paramtype="std::map<std::string,float>", description="A map of <std::string,float> with default value.", default={"a":0.1, "b":1.2, "c":2.3, "d":3.4, "e":4.5})
+gen.add("map_string_float", paramtype="std::map<std::string,float>", description="A map of <std::string,float> with default value.", default={"a":0.1, "b":1.2, "c":2.3, "d":3.4, "e":4.5}, min=0, max=5)
 
 # Constant and configurable parameters
 gen.add("optimal_parameter", paramtype="double", description="Optimal parameter, can not be set via rosparam", default=10, constant=True)

@@ -168,9 +168,21 @@ class ParameterGenerator(object):
         if in_type.startswith('std::map'):
             param['is_map'] = True
 
-        if (param['is_vector'] or param['is_map']):
+        if (param['is_vector']):
             if (param['max'] is not None or param['min'] is not None):
-                eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+                ptype = in_type[12:-1].strip()
+                if ptype == "std::string":
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+
+        if (param['is_map']):
+            if (param['max'] is not None or param['min'] is not None):
+                ptype = in_type[9:-1].split(',')
+                if len(ptype) != 2:
+                    eprint(param['name'], "Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
+                           "parameter %s" % in_type)
+                ptype = ptype[1].strip()
+                if ptype == "std::string":
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
 
         pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
         if not re.match(pattern, param['name']):
