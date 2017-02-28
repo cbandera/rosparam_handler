@@ -64,7 +64,7 @@ macro(generate_ros_parameter_files)
                     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
             )
         elseif( _cfgext STREQUAL ".cfg" )
-            list(APPEND ${PROJECT_NAME}_LOCAL_CFG_FILES "${_output_cfg}")
+            list(APPEND ${PROJECT_NAME}_LOCAL_CFG_FILES "${_cfg}")
         else()
             message(WARNING "Unknown file ending : ${_cfgext}. Skipping")
         endif()
