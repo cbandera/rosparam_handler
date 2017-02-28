@@ -30,6 +30,7 @@ The `rosparam_handler` let's you:
 See the Tutorials on
 - [How to write your first .params file](doc/HowToWriteYourFirstParamsFile.md)
 - [How to use your parameter struct](doc/HowToUseYourParameterStruct.md)
+- [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)
 
 ## Credits
 This project uses Open Source components. The code was, in large parts, built upon such existing open source software. You can find the source code of their projects along with license information below. We acknowledge and are grateful to these developers for their contributions to open source.
