@@ -73,9 +73,9 @@ struct ${ClassName}Parameters {
   using Config = ${ClassName}Config;
 
   ${ClassName}Parameters(const ros::NodeHandle& private_node_handle)
-  : privateNamespace{private_node_handle.getNamespace() + "/"},
-    nodeName{getNodeName(private_node_handle)},
-    globalNamespace{"/"} {}
+  : globalNamespace{"/"},
+    privateNamespace{private_node_handle.getNamespace() + "/"},
+    nodeName{getNodeName(private_node_handle)} {}
 
   void fromParamServer(){
 $fromParamServer
