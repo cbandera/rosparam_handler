@@ -1,11 +1,6 @@
 
 macro(generate_ros_parameter_files)
 
-    #Require C++11
-    set(CMAKE_CXX_STANDARD 11)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
     set(CFG_FILES "${ARGN}")
     set(ROSPARAM_HANDLER_ROOT_DIR "${ROSPARAM_HANDLER_CMAKE_DIR}/..")
     if (${PROJECT_NAME}_CATKIN_PACKAGE)
@@ -84,6 +79,9 @@ macro(generate_ros_parameter_files)
     # ensure that the folder exists
     file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION})
 
+    #Require C++11
+    set_property(TARGET ${PROJECT_NAME}_genparam PROPERTY CXX_STANDARD 11)
+    set_property(TARGET ${PROJECT_NAME}_genparam PROPERTY CXX_STANDARD_REQUIRED ON)
 
     # generate dynamic reconfigure files
     if(dynamic_reconfigure_FOUND_CATKIN_PROJECT)
