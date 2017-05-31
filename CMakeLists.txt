@@ -12,11 +12,16 @@ catkin_package(
 )
 
 install(
-        DIRECTORY cmake/Modules
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/cmake
+        DIRECTORY cmake
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(
         DIRECTORY templates
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(
+        DIRECTORY include/rosparam_handler
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
