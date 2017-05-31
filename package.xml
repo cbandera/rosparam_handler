@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rosparam_handler</name>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <description>An easy wrapper for using parameters in ROS.</description>
   <license>BSD</license>
 
