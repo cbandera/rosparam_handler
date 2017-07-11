@@ -59,36 +59,76 @@ class ${ClassName}Parameters(dict):
 
     @staticmethod
     def get_param(param_name, config):
+        def get_type(type_string):
+            if type_string == 'std::string':
+                return str
+            elif type_string == 'int':
+                return int
+            elif type_string == 'bool':
+                return bool
+            elif type_string == 'float' or type_string == 'double':
+                return float
+            else:
+                raise ValueError()
+
         full_name = "/" + param_name if config['global_scope'] else "~" + param_name
         val = rospy.get_param(full_name, config['default'])
         # test whether type is correct
         try:
-            param_type = config['type']
             if config['is_vector']:
                 val = list(val)
+                config_type = config['type']
+                val_type = get_type(config_type[config_type.find("<")+1:config_type.find(">")])
+                val = [ val_type(v) for v in val ]
             elif config['is_map']:
                 val = dict(val)
-            elif param_type == 'std::string':
-                val = str(val)
-            elif param_type == 'int':
-                val = int(val)
-            elif param_type == 'bool':
-                val = bool(val)
-            elif param_type == 'float' or param_type == 'double':
-                val = float(val)
+                config_type = config['type']
+                key_type = get_type(config_type[config_type.find("<")+1:config_type.find(",")])
+                val_type = get_type(config_type[config_type.find(",")+1:config_type.find(">")])
+                val = { key_type(key): val_type(v) for key, v in val.items() }
+            else:
+                val = get_type(config['type'])(val)
         except ValueError:
             rospy.logerr(
                 "Parameter {} is set, but has a different type. Using default value instead.".format(param_name))
             val = config['default']
         # test bounds
-        if config['min'] is not None and config['min'] > val:
-            rospy.logerr(
-                "Value of {} for {} is smaller than minimal allowed value. "
-                "Correcting value to min={}".format(val, param_name, config['min']))
-            val = config['min']
-        if config['max'] is not None and config['max'] < val:
-            rospy.logerr(
-                "Value of {} for {} is greater than maximal allowed value. "
-                "Correcting value to max={}".format(val,param_name, config['max']))
-            val = config['max']
+        if config['min'] is not None:
+            if config['is_vector']:
+                if min(val) < config['min']:
+                    rospy.logerr(
+                        "Some values in {} for {} are smaller than minimal allowed value. "
+                        "Correcting them to min={}".format(val, param_name, config['min']))
+                    val = [ v if v > config['min'] else config['min'] for v in val ]
+            elif config['is_map']:
+                if min(val.values()) < config['min']:
+                    rospy.logerr(
+                        "Some values in {} for {} are smaller than minimal allowed value. "
+                        "Correcting them to min={}".format(val, param_name, config['min']))
+                    val = { k: (v if v > config['min'] else config['min']) for k, v in val.items() }
+            elif val < config['min']:
+                rospy.logerr(
+                    "Value of {} for {} is smaller than minimal allowed value. "
+                    "Correcting value to min={}".format(val, param_name, config['min']))
+                val = config['min']
+
+        if config['max'] is not None:
+            if config['is_vector']:
+                if max(val) > config['max']:
+                    rospy.logerr(
+                        "Some values in {} for {} are greater than maximal allowed value. "
+                        "Correcting them to max={}".format(val, param_name, config['max']))
+                    val = [ v if v < config['max'] else config['max'] for v in val ]
+            elif config['is_map']:
+                if max(val.values()) > config['max']:
+                    rospy.logerr(
+                        "Some values in {} for {} are greater than maximal allowed value. "
+                        "Correcting them to max={}".format(val, param_name, config['max']))
+                    val = { k: (v if v < config['max'] else config['max']) for k, v in val.items() }
+            elif val > config['max']:
+                rospy.logerr(
+                    "Value of {} for {} is greater than maximal allowed value. "
+                    "Correcting value to max={}".format(val, param_name, config['max']))
+                val = config['max']
         return val
+
