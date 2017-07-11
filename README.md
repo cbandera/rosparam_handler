@@ -25,6 +25,7 @@ The `rosparam_handler` let's you:
 - set default, min and max values
 - choose between global and private namespace
 - save a lot of time on specifying your parameters in several places.
+- ...in both C++ and Python
 
 ## Usage
 See the Tutorials on
