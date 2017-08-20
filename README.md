@@ -32,6 +32,15 @@ See the Tutorials on
 - [How to use your parameter struct](doc/HowToUseYourParameterStruct.md)
 - [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)
 
+## Installation
+`rosparam_handler` has been released for 
+- indigo
+- jade
+- kinetic
+
+To get the package run
+`rosdep update && rosdep install rosparam_handler`
+
 ## Credits
 This project uses Open Source components. The code was, in large parts, built upon such existing open source software. You can find the source code of their projects along with license information below. We acknowledge and are grateful to these developers for their contributions to open source.
 
