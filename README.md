@@ -44,7 +44,7 @@ To get the package run
 `rosdep update && rosdep install rosparam_handler`
 
 ## Contribution
-`rosparam_handler` is developt according to Vincent Driessen's [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/).
+`rosparam_handler` is developed according to Vincent Driessen's [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/).
 This means, 
 - the master branch is for releases only. 
 - development is done on feature branches
@@ -52,6 +52,11 @@ This means,
 
 For a PullRequest to get merged into develop, it must pass
 - Review by one of the maintainers.
+    + Are the changes introduces in scope of the rosparam_handler?
+    + Is the documentation updated?
+    + Are enough reasonable tests added?
+    + Will these changes break the API?
+    + Do the new changes follow the current style of naming?
 - Compile / Test / Run on all target environments.
 
 ## Credits
