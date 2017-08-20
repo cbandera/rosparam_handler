@@ -22,8 +22,8 @@ struct ${ClassName}Config{};
 
 namespace ${pkgname} {
 
-#ifndef UTIL_FUNCTIONS_${pkgname}
-#define UTIL_FUNCTIONS_${pkgname}
+#ifndef ROSPARAM_HANDLER_UTIL_FUNCTIONS
+#define ROSPARAM_HANDLER_UTIL_FUNCTIONS
 inline std::string getNodeName(const ros::NodeHandle& privateNodeHandle){
     std::string name_space = privateNodeHandle.getNamespace();
     std::stringstream tempString(name_space);
@@ -66,7 +66,15 @@ using is_map = std::is_same<T, std::map<typename T::key_type,
                                         typename T::key_compare,
                                         typename T::allocator_type>>;
 
-#endif /* UTIL_FUNCTIONS_${pkgname} */
+class RosparamHandlerError : public std::runtime_error {};
+
+void rosparam_handler_exit(const std::string msg = "Runtime Error in rosparam handler.") 
+{
+  // std::exit(EXIT_FAILURE);
+  throw std::runtime_error(msg);
+}
+
+#endif // ROSPARAM_HANDLER_UTIL_FUNCTIONS
 
 struct ${ClassName}Parameters {
 
@@ -89,7 +97,7 @@ $test_limits
 $fromConfig
 #else
   ROS_FATAL_STREAM("dynamic_reconfigure was not found during compilation. So fromConfig() is not available. Please recompile with dynamic_reconfigure.");
-  std::exit(EXIT_FAILURE);
+  rosparam_handler_exit("dynamic_reconfigure was not found during compilation. So fromConfig() is not available. Please recompile with dynamic_reconfigure.");
 #endif
   }
 
@@ -110,11 +118,11 @@ $non_default_params    );
     if (!ros::param::has(key)) {
       ROS_ERROR_STREAM("Parameter '" << key << "' is not defined.");
       missingParamsWarning();
-      std::exit(EXIT_FAILURE);
+      rosparam_handler_exit("RosparamHandler: Undefined parameter.");
     } else if (!ros::param::get(key, val)) {
       ROS_ERROR_STREAM("Could not retrieve parameter'" << key << "'. Does it have a different type?");
       missingParamsWarning();
-      std::exit(EXIT_FAILURE);
+      rosparam_handler_exit("RosparamHandler: GetParam could net retrieve parameter.");
     }
   }
 
