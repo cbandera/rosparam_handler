@@ -33,7 +33,7 @@ See the Tutorials on
 - [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)
 
 ## Installation
-`rosparam_handler` has been released for 
+`rosparam_handler` has been released in version `0.1.1` for 
 - indigo
 - jade
 - kinetic
