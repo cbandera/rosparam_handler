@@ -1,5 +1,5 @@
 # rosparam_handler
-[![Build Status](https://travis-ci.org/cbandera/rosparam_handler.svg?branch=master)](https://travis-ci.org/cbandera/rosparam_handler)
+[![Build Status](https://travis-ci.org/cbandera/rosparam_handler.svg?branch=develop)](https://travis-ci.org/cbandera/rosparam_handler)
 
 ## Package Summary
 A unified parameter handler for nodes with automatic code generation.
