@@ -5,6 +5,25 @@ find_package(catkin REQUIRED)
 
 catkin_python_setup()
 
+if (CATKIN_ENABLE_TESTING)
+	# set compiler flags
+	include(CheckCXXCompilerFlag)
+	CHECK_CXX_COMPILER_FLAG("-std=c++14" Cpp14CompilerFlag)
+	if (${Cpp14CompilerFlag})
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17")
+		#no additional flag is required
+	else()
+		message(FATAL_ERROR "Compiler does not have c++14 support. Use at least g++4.9 or Visual Studio 2013 and newer.")
+	endif()
+
+    find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure rostest roscpp)
+    set(ROSPARAM_HANDLER_CMAKE_DIR ${CMAKE_CURRENT_LIST_DIR}/cmake)
+    include(cmake/rosparam_handler-macros.cmake)
+	file(GLOB PROJECT_TEST_FILES_PARAMS RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "test/cfg/*.params")
+	generate_ros_parameter_files(${PROJECT_TEST_FILES_PARAMS})
+endif()
+
 catkin_package(
         INCLUDE_DIRS include
         CATKIN_DEPENDS catkin
@@ -25,3 +44,14 @@ install(
         DIRECTORY include/rosparam_handler
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
+if (CATKIN_ENABLE_TESTING)
+	file(GLOB PROJECT_TEST_FILES_SRC RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "test/src/*.cpp")
+    set(TEST_TARGET_NAME "rosparam_handler_test")
+    add_rostest_gtest(${TEST_TARGET_NAME} test/launch/rosparam_handler.test ${PROJECT_TEST_FILES_SRC})
+    target_link_libraries(${TEST_TARGET_NAME} ${catkin_LIBRARIES} gtest)
+    target_include_directories(${TEST_TARGET_NAME} PUBLIC ${catkin_INCLUDE_DIRS} include)
+    add_dependencies(${TEST_TARGET_NAME} ${catkin_EXPORTED_TARGETS} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+    set_property(TARGET ${TEST_TARGET_NAME} PROPERTY CXX_STANDARD 11)
+    set_property(TARGET ${TEST_TARGET_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+endif()

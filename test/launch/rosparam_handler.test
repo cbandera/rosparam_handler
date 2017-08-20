@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+	<test test-name="rosparam_handler_test" pkg="rosparam_handler" type="rosparam_handler_test" time-limit="30.0" ns="test">
+  		<rosparam command="load" file="$(find rosparam_handler)/test/launch/params/test_launch_parameters.yaml" />
+	</test>
+</launch>

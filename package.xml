@@ -11,6 +11,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <run_depend>catkin</run_depend>
-
+  <build_depend>rostest</build_depend>
+  <test_depend>roscpp</test_depend>
+  <test_depend>dynamic_reconfigure</test_depend>
 </package>
 

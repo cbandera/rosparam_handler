@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+####### workaround so that the module is found for test files #######
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__),"../../src"))
+######################################################
+
+from rosparam_handler.parameter_generator_catkin import *
+gen = ParameterGenerator()
+
+gen.add("int_param", paramtype="int", description="Handler should keep node from starting, when no default is given here or at launch.")
+
+#Syntax : Package, Node, Config Name(The final name will be MyDummyConfig)
+exit(gen.generate("rosparam_handler", "rosparam_handler_test", "DefaultsMissing"))
