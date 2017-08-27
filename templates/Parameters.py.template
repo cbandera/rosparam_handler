@@ -73,6 +73,9 @@ class ${ClassName}Parameters(dict):
 
         full_name = "/" + param_name if config['global_scope'] else "~" + param_name
         val = rospy.get_param(full_name, config['default'])
+        if val is None:
+            raise KeyError("Parameter {} is neither set on the parameter server nor "
+                           "has it a default value".format(param_description))
         # test whether type is correct
         try:
             if config['is_vector']:
