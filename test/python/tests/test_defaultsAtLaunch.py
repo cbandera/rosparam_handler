@@ -3,7 +3,7 @@ from rosparam_handler.param.DefaultsAtLaunchParameters import DefaultsAtLaunchPa
 
 
 class TestDefaultsAtLaunch(unittest.TestCase):
-    def test_defaults(self):
+    def test_defaults_at_launch(self):
         params = DefaultsAtLaunchParameters()
         self.assertEqual(params.int_param_wo_default, 1)
         self.assertAlmostEqual(params.double_param_wo_default, 1.1)
