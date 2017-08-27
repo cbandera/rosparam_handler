@@ -111,7 +111,6 @@ class ParameterGenerator(object):
 
         - If no default value is given, you need to specify one in your launch file
         - Global parameters, vectors, maps and constant params can not be configurable
-        - Global parameters, vectors and maps can not have a default, min or max value
 
         :param self:
         :param name: The Name of you new parameter
@@ -160,10 +159,11 @@ class ParameterGenerator(object):
         :return:
         """
 
-        if param['type'].strip() == "std::string" and (param['max'] is not None or param['min'] is not None):
-            eprint(param['name'], "Max or min specified for for variable of type string")
-
         in_type = param['type'].strip()
+        if param['max'] is not None or param['min'] is not None:
+            if in_type in ["std::string", "bool"]:
+                eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
+
         if in_type.startswith('std::vector'):
             param['is_vector'] = True
         if in_type.startswith('std::map'):
@@ -173,7 +173,7 @@ class ParameterGenerator(object):
             if (param['max'] is not None or param['min'] is not None):
                 ptype = in_type[12:-1].strip()
                 if ptype == "std::string":
-                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
 
         if (param['is_map']):
             if (param['max'] is not None or param['min'] is not None):
@@ -183,7 +183,7 @@ class ParameterGenerator(object):
                            "parameter %s" % in_type)
                 ptype = ptype[1].strip()
                 if ptype == "std::string":
-                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
 
         pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
         if not re.match(pattern, param['name']):

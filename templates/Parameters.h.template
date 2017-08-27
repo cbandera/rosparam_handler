@@ -13,6 +13,7 @@
 #include <limits>
 #include <ros/param.h>
 #include <ros/node_handle.h>
+#include <rosparam_handler/utilities.hpp>
 #ifdef DYNAMIC_RECONFIGURE_FOUND
 #include <${pkgname}/${ClassName}Config.h>
 #else
@@ -22,59 +23,13 @@ struct ${ClassName}Config{};
 
 namespace ${pkgname} {
 
-#ifndef UTIL_FUNCTIONS_${pkgname}
-#define UTIL_FUNCTIONS_${pkgname}
-inline std::string getNodeName(const ros::NodeHandle& privateNodeHandle){
-    std::string name_space = privateNodeHandle.getNamespace();
-    std::stringstream tempString(name_space);
-    std::string name;
-    while(std::getline(tempString, name, '/')){;}
-    return name;
-}
-
-template <typename T>
-std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
-  if ( !v.empty() ) {
-    out << '[';
-    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
-    out << "\b\b]";
-  }
-  return out;
-}
-
-template<typename T1, typename T2>
-std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
-{
-  stream << '{';
-  for (typename std::map<T1, T2>::const_iterator it = map.begin();
-       it != map.end();
-       ++it)
-    {
-      stream << (*it).first << " --> " << (*it).second << ", ";
-    }
-  stream << '}';
-  return stream;
-}
-
-template <typename T>
-using is_vector = std::is_same<T, std::vector<typename T::value_type,
-                                              typename T::allocator_type>>;
-
-template <typename T>
-using is_map = std::is_same<T, std::map<typename T::key_type,
-                                        typename T::mapped_type,
-                                        typename T::key_compare,
-                                        typename T::allocator_type>>;
-
-#endif /* UTIL_FUNCTIONS_${pkgname} */
-
 struct ${ClassName}Parameters {
 
   using Config = ${ClassName}Config;
 
   ${ClassName}Parameters(const ros::NodeHandle& private_node_handle)
   : privateNamespace{private_node_handle.getNamespace() + "/"},
-    nodeName{getNodeName(private_node_handle)},
+    nodeName{rosparam_handler::getNodeName(private_node_handle)},
     globalNamespace{"/"} {}
 
   void fromParamServer(){
@@ -89,7 +44,7 @@ $test_limits
 $fromConfig
 #else
   ROS_FATAL_STREAM("dynamic_reconfigure was not found during compilation. So fromConfig() is not available. Please recompile with dynamic_reconfigure.");
-  std::exit(EXIT_FAILURE);
+  rosparam_handler::exit("dynamic_reconfigure was not found during compilation. So fromConfig() is not available. Please recompile with dynamic_reconfigure.");
 #endif
   }
 
@@ -110,11 +65,11 @@ $non_default_params    );
     if (!ros::param::has(key)) {
       ROS_ERROR_STREAM("Parameter '" << key << "' is not defined.");
       missingParamsWarning();
-      std::exit(EXIT_FAILURE);
+      rosparam_handler::exit("RosparamHandler: Undefined parameter.");
     } else if (!ros::param::get(key, val)) {
       ROS_ERROR_STREAM("Could not retrieve parameter'" << key << "'. Does it have a different type?");
       missingParamsWarning();
-      std::exit(EXIT_FAILURE);
+      rosparam_handler::exit("RosparamHandler: GetParam could net retrieve parameter.");
     }
   }
 
