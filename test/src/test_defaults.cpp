@@ -47,11 +47,6 @@ TEST(RosparamHandler, DefaultsOnParamServer) {
         EXPECT_EQ(bool_param, testParams.bool_param_w_default);
     }
     {
-        bool bool_param;
-        ASSERT_TRUE(nh.getParam("bool_param_w_default", bool_param));
-        EXPECT_EQ(bool_param, testParams.bool_param_w_default);
-    }
-    {
         std::vector<int> vector_int_param;
         ASSERT_TRUE(nh.getParam("vector_int_param_w_default", vector_int_param));
         EXPECT_EQ(vector_int_param, testParams.vector_int_param_w_default);
