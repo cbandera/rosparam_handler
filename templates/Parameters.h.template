@@ -30,7 +30,7 @@ struct ${ClassName}Parameters {
   ${ClassName}Parameters(const ros::NodeHandle& private_node_handle)
   : globalNamespace{"/"},
     privateNamespace{private_node_handle.getNamespace() + "/"},
-    nodeName{getNodeName(private_node_handle)} {}
+    nodeName{rosparam_handler::getNodeName(private_node_handle)} {}
 
   void fromParamServer(){
 $fromParamServer
