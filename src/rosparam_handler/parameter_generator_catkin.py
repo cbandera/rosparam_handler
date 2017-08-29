@@ -344,8 +344,7 @@ class ParameterGenerator(object):
             template = f.read()
 
         param_entries = self._generate_param_entries()
-        print(param_entries)
-
+        
         param_entries = "\n".join(param_entries)
         template = Template(template).substitute(pkgname=self.pkgname, nodename=self.nodename,
                                                  classname=self.classname, params=param_entries)
