@@ -54,7 +54,7 @@ global_scope=False, constant=False)
 
 # Add an enum:
 gen.add_enum("my_enum", description="My first self written enum",
-entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium"))
+entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium")
 
 # Add a subgroup
 my_group = gen.add_group("my_group")
