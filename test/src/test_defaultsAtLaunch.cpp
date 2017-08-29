@@ -19,7 +19,7 @@ TEST(RosparamHandler, DefaultsAtLaunch) {
     ASSERT_EQ(std::vector<bool>({false, true}), testParams.vector_bool_param_wo_default);
     ASSERT_EQ(std::vector<std::string>({"Hello", "World"}), testParams.vector_string_param_wo_default);
 
-	std::map<std::string,std::string> tmp{{"Hello","World"}};
+    std::map<std::string,std::string> tmp{{"Hello","World"}};
     ASSERT_EQ(tmp, testParams.map_param_wo_default);
 
     ASSERT_EQ(1, testParams.enum_param_wo_default);
