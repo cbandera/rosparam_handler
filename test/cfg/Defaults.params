@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+####### workaround so that the module is found #######
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__),"../../src"))
+######################################################
+
+from rosparam_handler.parameter_generator_catkin import *
+gen = ParameterGenerator()
+
+# Parameters with different types
+gen.add("int_param_w_default", paramtype="int", description="An Integer parameter", default=1)
+gen.add("double_param_w_default", paramtype="double",description="A double parameter", default=1.1)
+gen.add("str_param_w_default", paramtype="std::string", description="A string parameter", default="Hello World")
+gen.add("bool_param_w_default", paramtype="bool", description="A Boolean parameter", default=True)
+
+gen.add("vector_int_param_w_default", paramtype="std::vector<int>", description="A vector of int parameter", default=[1,2,3])
+gen.add("vector_double_param_w_default", paramtype="std::vector<double>", description="A vector of double parameter", default=[1.1, 1.2, 1.3])
+gen.add("vector_bool_param_w_default", paramtype="std::vector<bool>", description="A vector of bool parameter", default=[False, True])
+gen.add("vector_string_param_w_default", paramtype="std::vector<std::string>", description="A vector of string parameter", default=["Hello", "World"])
+
+gen.add("map_param_w_default", paramtype="std::map<std::string,std::string>", description="A map parameter", default={"Hello": "World"})
+
+gen.add_enum("enum_param_w_default", description="enum", entry_strings=["Small", "Medium", "Large", "ExtraLarge"], default="Medium")
+
+#Syntax : Package, Node, Config Name(The final name will be MyDummyConfig)
+exit(gen.generate("rosparam_handler", "rosparam_handler_test", "Defaults"))
