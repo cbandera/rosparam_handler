@@ -25,7 +25,7 @@ rosparam_tutorials::TutorialParameters params_;
 ## Initializing the struct.
 When initializing your node, the params struct must be initialized with a private NodeHandle.
 
-The call to `fromParamServer()` will take care of getting all parameter values from the parameter server, checking their type, and checking that a default value is set, if you haven't provided one on your own. When min and max values are specified, these bounds will be checked as well.
+The call to `fromParamServer()` will take care of getting all parameter values from the parameter server, checking their type, and checking that a default value is set, if you haven't provided one on your own. If you have specified a default value, but the parameter is not yet present on the parameter server, it will be set. When min and max values are specified, these bounds will be checked as well.
 
 ```cpp
 MyNodeClass::MyNodeClass()
