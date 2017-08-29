@@ -36,6 +36,14 @@ install(
 )
 
 if (CATKIN_ENABLE_TESTING)
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" Cpp11CompilerFlag)
+    if (${Cpp11CompilerFlag})
+           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    else()
+           message(FATAL_ERROR "Compiler does not have c++11 support.")
+    endif()
+
 	file(GLOB PROJECT_TEST_FILES_SRC RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "test/src/*.cpp")
     set(TEST_TARGET_NAME "rosparam_handler_test")
     add_rostest_gtest(${TEST_TARGET_NAME} test/launch/rosparam_handler.test ${PROJECT_TEST_FILES_SRC})
