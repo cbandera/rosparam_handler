@@ -72,10 +72,16 @@ class ${ClassName}Parameters(dict):
                 raise ValueError()
 
         full_name = "/" + param_name if config['global_scope'] else "~" + param_name
-        val = rospy.get_param(full_name, config['default'])
-        if val is None:
-            raise KeyError("Parameter {} is neither set on the parameter server nor "
-                           "has it a default value".format(param_description))
+        try:
+            val = rospy.get_param(full_name)
+        except KeyError:
+            if config['default'] is None:
+                raise KeyError("Parameter {} is neither set on the parameter server nor "
+                               "has it a default value".format(param_description))
+            rospy.loginfo("Parameter {} is not yet set. Setting default value".format(param_name))
+            rospy.set_param(full_name, config['default'])
+            val = config['default']
+
         # test whether type is correct
         try:
             if config['is_vector']:
