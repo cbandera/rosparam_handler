@@ -3,6 +3,6 @@ from rosparam_handler.param.DefaultsMissingParameters import DefaultsMissingPara
 
 
 class TestDefaultsMissingParameters(unittest.TestCase):
-    def runTest(self):
+    def test_defaults_missing(self):
         with self.assertRaises(KeyError):
             params = DefaultsMissingParameters()

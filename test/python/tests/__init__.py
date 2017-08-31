@@ -17,8 +17,8 @@ class RosparamTestSuite(unittest.TestSuite):
                 for name in dir(module):
                     obj = getattr(module, name)
                     if isinstance(obj, type) and issubclass(obj, unittest.TestCase):
-                        testcases[name] = obj
+                        testcases[name] = unittest.TestLoader().loadTestsFromTestCase(obj)
 
             # Add testcases
             for test_name, test in testcases.items():
-                self.addTest(test())
+                self.addTest(test)
