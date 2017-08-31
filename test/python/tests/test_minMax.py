@@ -3,7 +3,7 @@ from rosparam_handler.param.MinMaxParameters import MinMaxParameters
 
 
 class TestMinMaxParameters(unittest.TestCase):
-    def test_min_max(self):
+    def runTest(self):
         params = MinMaxParameters()
         self.assertEqual(params.int_param_w_minmax, 2)
         self.assertAlmostEqual(params.double_param_w_minmax, 2.)

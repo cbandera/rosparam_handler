@@ -4,7 +4,7 @@ import rospy
 
 
 class TestDefaults(unittest.TestCase):
-    def test_defaults(self):
+    def runTest(self):
         params = DefaultsParameters()
         self.assertEqual(params.int_param_w_default, 1)
         self.assertAlmostEqual(params.double_param_w_default, 1.1)
@@ -18,7 +18,9 @@ class TestDefaults(unittest.TestCase):
         self.assertEqual(params.map_param_w_default, {"Hello": "World"})
         self.assertEqual(params.enum_param_w_default, 1)
 
-    def test_set_defaults_on_param_server(self):
+
+class TestDefaultsOnServer(unittest.TestCase):
+    def runTest(self):
         params = DefaultsParameters()
         # now all parameters should be set on param server
         self.assertEqual(params.int_param_w_default, rospy.get_param("~int_param_w_default"))
