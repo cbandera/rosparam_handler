@@ -53,3 +53,22 @@ void reconfigureRequest(TutorialConfig& config, uint32_t level) {
 This will update all values that were specified as configurable. At the same time, it assures that all dynamic_reconfigure parameters live in the same namespace as those on the parameter server to avoid problems with redundant parameters.
 
 You can find a running version of this example code in the [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)-Repository
+
+## Python
+All your parameters are fully available in python nodes as well. Just import the parameter file:
+```python
+from rosparam_tutorials.param.TutorialParameters import TutorialParameters
+```
+
+Unlike in C++, the call to fromParamServer is not necessary:
+```python
+self.params = TutorialParameters()
+```
+
+And a dynamic_reconfigure callback might look like that:
+```python
+def reconfigure_callback(self, config, level):
+    self.params.from_config(config)
+    print("Parameter dummy changed to {}".format(self.params.dummy))
+```
+
