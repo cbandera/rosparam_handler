@@ -35,6 +35,10 @@ install(
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
+install(PROGRAMS scripts/generate_yaml
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 if (CATKIN_ENABLE_TESTING)
     include(CheckCXXCompilerFlag)
     CHECK_CXX_COMPILER_FLAG("-std=c++11" Cpp11CompilerFlag)

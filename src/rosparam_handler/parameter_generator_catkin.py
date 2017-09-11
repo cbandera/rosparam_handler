@@ -329,6 +329,13 @@ class ParameterGenerator(object):
         if self.parent:
             eprint("You should not call generate on a group! Call it on the main parameter generator instead!")
 
+        return self._generateImpl()
+
+    def _generateImpl(self):
+        """
+        Implementation level function. Can be overwritten by derived classes.
+        :return:
+        """
         self._generatecfg()
         self._generatecpp()
         self._generatepy()
@@ -487,6 +494,39 @@ class ParameterGenerator(object):
         with open(py_file, 'w') as f:
             f.write(content)
 
+    def _generateyml(self):
+        """
+        Generate .yaml file for roslaunch
+        :param self:
+        :return:
+        """
+        params = self._get_parameters()
+        paramDescription = str(params)
+
+        content = "### This file was generated using the rosparam_handler generate_yaml script.\n"
+
+        for entry in params:
+            if not entry["constant"]:
+                content += "\n"
+                content += "# Name:\t" + str(entry["name"]) + "\n"
+                content += "# Desc:\t" + str(entry["description"]) + "\n"
+                content += "# Type:\t" + str(entry["type"]) + "\n"
+                if entry['min'] or entry['max']:
+                    content += "# [min,max]:\t[" + str(entry["min"]) + "/" + str(entry["max"]) + "]" + "\n"
+                if entry["global_scope"]:
+                    content += "# Lives in global namespace!\n"
+                if entry["default"] is not None:
+                    content += str(entry["name"]) + " = " + str(entry["default"]) + "\n"
+                else:
+                    content += "# " + str(entry["name"]) + " = \n"
+
+        from pprint import pprint
+        pprint(params)
+        yaml_file = os.path.join(os.getcwd(), self.classname + "Parameters.yaml")
+
+        with open(yaml_file, 'w') as f:
+            f.write(content)
+
     def _get_parameters(self):
         """
         Returns parameter of this and all childs
@@ -552,3 +592,10 @@ class ParameterGenerator(object):
         else:
             # Pray and hope that it is a string
             return bool(param)
+
+
+# Create derived class for yaml generation
+class YamlGenerator(ParameterGenerator):
+    def _generateImpl(self):
+        self._generateyml()
+        return 0
