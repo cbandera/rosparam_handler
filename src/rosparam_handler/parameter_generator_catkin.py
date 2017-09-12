@@ -520,8 +520,6 @@ class ParameterGenerator(object):
                 else:
                     content += "# " + str(entry["name"]) + " = \n"
 
-        from pprint import pprint
-        pprint(params)
         yaml_file = os.path.join(os.getcwd(), self.classname + "Parameters.yaml")
 
         with open(yaml_file, 'w') as f:

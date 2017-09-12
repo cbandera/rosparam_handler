@@ -10,7 +10,7 @@ if not os.path.exists(sys.argv[1]):
     sys.exit('ERROR: Param file %s was not found!' % sys.argv[1])
 
 # Read argument
-inFile = sys.argv[1] # "/home/claudio/Documents/repos/GitHub/rosparam_ws/src/rosparam_handler/test/cfg/Defaults.params"
+inFile = sys.argv[1]
 # Mock call arguments for call to ParamGenerator
 sys.argv[1:4] = ["", "", "", ""]
 # Redirect import statement
