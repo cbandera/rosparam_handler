@@ -6,22 +6,50 @@
 #include <ros/ros.h>
 #include <boost/algorithm/string.hpp>
 
-
+/// \brief Helper function to test for std::vector
 template <typename T>
 using is_vector = std::is_same<T, std::vector<typename T::value_type,
                                               typename T::allocator_type>>;
 
+/// \brief Helper function to test for std::map
 template <typename T>
 using is_map = std::is_same<T, std::map<typename T::key_type,
                                         typename T::mapped_type,
                                         typename T::key_compare,
                                         typename T::allocator_type>>;
-                                        
+
+/// \brief Outstream helper for std:vector
+template <typename T>
+std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
+  if ( !v.empty() ) {
+    out << '[';
+    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
+    out << "\b\b]";
+  }
+  return out;
+}
+
+/// \brief Outstream helper for std:map
+template<typename T1, typename T2>
+std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
+{
+  stream << '{';
+  for (typename std::map<T1, T2>::const_iterator it = map.begin();
+       it != map.end();
+       ++it)
+    {
+      stream << (*it).first << " --> " << (*it).second << ", ";
+    }
+  stream << '}';
+  return stream;
+}
+
+
 namespace rosparam_handler {
 
 /// \brief Sets the logger level according to a standardized parameter name 'verbosity'.
 ///
-/// @param nodeHandle The ROS node handle to search for the parameter 'verbosity'.
+/// \param nodeHandle The ROS node handle to search for the parameter 'verbosity'.
 inline void setLoggerLevel(const ros::NodeHandle& nodeHandle) {
 
 	std::string verbosity;
@@ -96,12 +124,19 @@ inline void exit(const std::string msg = "Runtime Error in rosparam handler.")
   throw std::runtime_error(msg);
 }
 
-
+/// \brief Set parameter on ROS parameter server
+///
+/// \param key Parameter name
+/// \param val Parameter value
 template <typename T>
 inline void setParam(const std::string key, T val) {
 	ros::param::set(key, val);
 }
 
+/// \brief Get parameter from ROS parameter server
+///
+/// \param key Parameter name
+/// \param val Parameter value
 template <typename T>
 inline bool getParam(const std::string key, T& val) {
 	if (!ros::param::has(key)) {
@@ -115,16 +150,19 @@ inline bool getParam(const std::string key, T& val) {
 	}
 }
 
+
+/// \brief Get parameter from ROS parameter server or use default value
+///
+/// If parameter does not exist on server yet, the default value is used and set on server.
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param defaultValue Parameter default value
 template <typename T>
 inline bool getParam(const std::string key, T& val, const T& defaultValue) {
-if (!ros::param::has(key)) {
+if (!getParam(key, val)) {
     val = defaultValue;
     ros::param::set(key, defaultValue);
-    ROS_INFO_STREAM("Parameter "<<key<<" is not yet set. Setting default value.");
-    return true;
-} else if (!ros::param::get(key, val)) {
-    ROS_WARN_STREAM("Parameter "<<key<<" is set, but has a different type. Using default value instead.");
-    val = defaultValue;
+    ROS_INFO_STREAM("Setting default value.");
     return true;
 } else {
 	// Param was already retrieved with last if statement.
@@ -132,6 +170,7 @@ if (!ros::param::has(key)) {
 }
 }
 
+/// \brief Tests that parameter is not set on the parameter server
 inline bool testConstParam(const std::string key){
 if (ros::param::has(key)) {
   ROS_WARN_STREAM("Parameter " << key << "' was set on the parameter server eventhough it was defined to be constant.");
@@ -141,7 +180,11 @@ if (ros::param::has(key)) {
 }
 }
 
-
+/// \brief Limit parameter to lower bound if parameter is a scalar.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template<typename T>
 inline typename std::enable_if<std::is_arithmetic<T>::value, void>::type testMin(const std::string key, T& val, T min = std::numeric_limits<T>::min()){
 if (val < min){
@@ -151,16 +194,31 @@ if (val < min){
 }
 }
 
+/// \brief Limit parameter to lower bound if parameter is a vector.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template<typename T>
 inline typename std::enable_if<is_vector<T>::value && std::is_arithmetic<typename T::value_type>::value, void>::type testMin(const std::string key, T& val, typename T::value_type min = std::numeric_limits<typename T::value_type>::min()){
 for (auto& v : val) testMin(key, v, min);
 }
 
+/// \brief Limit parameter to lower bound if parameter is a map.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template<typename T>
 inline typename std::enable_if<is_map<T>::value && std::is_arithmetic<typename T::mapped_type>::value, void>::type testMin(const std::string key, T& val, typename T::mapped_type min = std::numeric_limits<typename T::mapped_type>::min()){
 for (auto& v : val) testMin(key, v.second, min);
 }
 
+/// \brief Limit parameter to upper bound if parameter is a scalar.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template<typename T>
 inline typename std::enable_if<std::is_arithmetic<T>::value, void>::type testMax(const std::string key, T& val, T max = std::numeric_limits<T>::max()){
 if (val > max){
@@ -170,6 +228,11 @@ if (val > max){
 }
 }
 
+/// \brief Limit parameter to upper bound if parameter is a vector.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template <typename T>
 inline typename std::enable_if<
     is_vector<T>::value && std::is_arithmetic<typename T::value_type>::value,
@@ -180,6 +243,11 @@ testMax(const std::string key, T& val,
   for (auto& v : val) testMax(key, v, min);
 }
 
+/// \brief Limit parameter to upper bound if parameter is a map.
+///
+/// \param key Parameter name
+/// \param val Parameter value
+/// \param min Lower Threshold
 template <typename T>
 inline typename std::enable_if<
     is_map<T>::value && std::is_arithmetic<typename T::mapped_type>::value,
@@ -190,33 +258,3 @@ inline typename std::enable_if<
 }
 
 } // namespace rosparam_handler
-
-
-
-
-
-/// \brief Outstream helper for std:vector
-template <typename T>
-std::ostream& operator<< (std::ostream& out, const std::vector<T>& v) {
-  if ( !v.empty() ) {
-    out << '[';
-    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
-    out << "\b\b]";
-  }
-  return out;
-}
-
-/// \brief Outstream helper for std:map
-template<typename T1, typename T2>
-std::ostream &operator<<(std::ostream &stream, const std::map<T1, T2>& map)
-{
-  stream << '{';
-  for (typename std::map<T1, T2>::const_iterator it = map.begin();
-       it != map.end();
-       ++it)
-    {
-      stream << (*it).first << " --> " << (*it).second << ", ";
-    }
-  stream << '}';
-  return stream;
-}
