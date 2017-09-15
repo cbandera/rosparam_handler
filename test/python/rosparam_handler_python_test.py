@@ -6,7 +6,7 @@ import rospy
 import tests
 
 if __name__ == '__main__':
-	import rostest
-	
-	rospy.init_node(PKG)
-	rostest.rosrun(PKG, "RosparamTestSuite", "tests.RosparamTestSuite")
+    import rostest
+
+    rospy.init_node(PKG)
+    rostest.rosrun(PKG, "RosparamTestSuite", "tests.RosparamTestSuite")
