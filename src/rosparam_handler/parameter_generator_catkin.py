@@ -490,6 +490,11 @@ class ParameterGenerator(object):
             pass
         with open(py_file, 'w') as f:
             f.write(content)
+        init_file = os.path.join(self.py_gen_dir, "param", "__init__.py")
+        with open(init_file, 'wa') as f:
+            f.write("")
+        
+        
 
     def _get_parameters(self):
         """

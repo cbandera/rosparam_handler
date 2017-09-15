@@ -48,7 +48,7 @@ class TestDefaults(unittest.TestCase):
         params.vector_double_param_w_default = [1.3,1.2,1.2];
         params.vector_bool_param_w_default = [True, False];
         params.vector_string_param_w_default = ["World","Hello"];
-        params.map_param_w_default = {"World","Hello"};
+        params.map_param_w_default = {"World":"Hello"};
         params.enum_param_w_default =  2;
 
         # Upload parameters
