@@ -54,6 +54,13 @@ This will update all values that were specified as configurable. At the same tim
 
 You can find a running version of this example code in the [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)-Repository
 
+## Setting parameters on the server
+If you change your parameters at runtime from within the code, you can upload the current state of the parameters with
+```cpp
+params_.toParamServer();
+```
+This will set all non-const parameters with their current value on the ros parameter server.
+
 ## Python
 All your parameters are fully available in python nodes as well. Just import the parameter file:
 ```python
@@ -72,3 +79,7 @@ def reconfigure_callback(self, config, level):
     print("Parameter dummy changed to {}".format(self.params.dummy))
 ```
 
+And a call to set the parameters on the server will look like this:
+```python
+self.params.to_param_server
+```

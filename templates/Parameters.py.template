@@ -36,6 +36,17 @@ class ${ClassName}Parameters(dict):
 
             self[k] = self.get_param(k, config)
 
+
+    def to_param_server(self):
+        """
+        Sets parameters with current values on the parameter server.
+        """
+        for param_name, param_value in self.iteritems():
+            config = next((item for item in param_description if item["name"] == param_name), None)
+            if not config['constant']:
+                full_name = "/" + param_name if config['global_scope'] else "~" + param_name
+                rospy.set_param(full_name, param_value)
+               
     def from_config(self, config):
         """
         Reads parameter from a dynamic_reconfigure config file.

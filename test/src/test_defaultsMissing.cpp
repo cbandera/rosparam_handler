@@ -1,5 +1,5 @@
-#include <ros/ros.h>
 #include <gtest/gtest.h>
+#include <ros/ros.h>
 #include <rosparam_handler/DefaultsMissingParameters.h>
 
 typedef rosparam_handler::DefaultsMissingParameters ParamType;
