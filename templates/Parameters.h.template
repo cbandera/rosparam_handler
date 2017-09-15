@@ -41,7 +41,12 @@ $test_limits
       missingParamsWarning();
       rosparam_handler::exit("RosparamHandler: GetParam could net retrieve parameter.");
     }
-  ROS_DEBUG_STREAM(*this);
+    ROS_DEBUG_STREAM(*this);
+  }
+
+  /// \brief Set parameters on ROS parameter server.
+  void toParamServer(){
+$toParamServer        
   }
 
   /// \brief Update configurable parameters.

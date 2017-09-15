@@ -377,6 +377,7 @@ class ParameterGenerator(object):
         param_entries = []
         string_representation = []
         from_server = []
+        to_server = []
         non_default_params = []
         from_config = []
         test_limits = []
@@ -418,8 +419,10 @@ class ParameterGenerator(object):
             else:
                 param_entries.append(Template('  ${type} ${name}; /*!< ${description} */').substitute(
                     type=param['type'], name=name, description=param['description']))
-                from_server.append(Template('    getParam($paramname, $name$default);').substitute(
+                from_server.append(Template('    success &= getParam($paramname, $name$default);').substitute(
                     paramname=full_name, name=name, default=default, description=param['description']))
+                to_server.append(Template('  setParam(${paramname},${name});').substitute(paramname=full_name,name=name))
+
 
             # Test for configurable params
             if param['configurable']:
@@ -441,6 +444,7 @@ class ParameterGenerator(object):
         string_representation = "".join(string_representation)
         non_default_params = "".join(non_default_params)
         from_server = "\n".join(from_server)
+        to_server = "\n".join(to_server)
         from_config = "\n".join(from_config)
         test_limits = "\n".join(test_limits)
 
@@ -448,7 +452,7 @@ class ParameterGenerator(object):
                                                 parameters=param_entries, fromConfig=from_config,
                                                 fromParamServer=from_server, string_representation=string_representation,
                                                 non_default_params=non_default_params, nodename=self.nodename,
-                                                test_limits=test_limits)
+                                                test_limits=test_limits, toParamServer=to_server)
 
         header_file = os.path.join(self.cpp_gen_dir, self.classname + "Parameters.h")
         try:
