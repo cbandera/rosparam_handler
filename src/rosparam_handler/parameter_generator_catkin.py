@@ -527,7 +527,7 @@ class ParameterGenerator(object):
                 if entry["default"] is not None:
                     content += str(entry["name"]) + " = " + str(entry["default"]) + "\n"
                 else:
-                    content += "# " + str(entry["name"]) + " = \n"
+                    content += str(entry["name"]) + " = \n"
 
         yaml_file = os.path.join(os.getcwd(), self.classname + "Parameters.yaml")
 
