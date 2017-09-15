@@ -430,10 +430,10 @@ class ParameterGenerator(object):
 
             # Test limits
             if param['min'] is not None:
-                test_limits.append(Template('    testMin<$type>($paramname, $name, $min);').substitute(
+                test_limits.append(Template('    testMin($paramname, $name, $min);').substitute(
                     paramname=full_name, name=name, min=param['min'], type=param['type']))
             if param['max'] is not None:
-                test_limits.append(Template('    testMax<$type>($paramname, $name, $max);').substitute(
+                test_limits.append(Template('    testMax($paramname, $name, $max);').substitute(
                     paramname=full_name, name=name, max=param['max'], type=param['type']))
 
             # Add debug output

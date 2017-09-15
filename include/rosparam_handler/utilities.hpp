@@ -186,7 +186,7 @@ if (ros::param::has(key)) {
 /// \param val Parameter value
 /// \param min Lower Threshold
 template<typename T>
-inline typename std::enable_if<std::is_arithmetic<T>::value, void>::type testMin(const std::string key, T& val, T min = std::numeric_limits<T>::min()){
+inline void testMin(const std::string key, T& val, T min = std::numeric_limits<T>::min()){
 if (val < min){
   ROS_WARN_STREAM("Value of " << val << " for "
                   << key << " is smaller than minimal allowed value. Correcting value to min=" << min);
@@ -200,7 +200,7 @@ if (val < min){
 /// \param val Parameter value
 /// \param min Lower Threshold
 template<typename T>
-inline typename std::enable_if<is_vector<T>::value && std::is_arithmetic<typename T::value_type>::value, void>::type testMin(const std::string key, T& val, typename T::value_type min = std::numeric_limits<typename T::value_type>::min()){
+inline void testMin(const std::string key, std::vector<T>& val, T min = std::numeric_limits<T>::min()){
 for (auto& v : val) testMin(key, v, min);
 }
 
@@ -209,8 +209,8 @@ for (auto& v : val) testMin(key, v, min);
 /// \param key Parameter name
 /// \param val Parameter value
 /// \param min Lower Threshold
-template<typename T>
-inline typename std::enable_if<is_map<T>::value && std::is_arithmetic<typename T::mapped_type>::value, void>::type testMin(const std::string key, T& val, typename T::mapped_type min = std::numeric_limits<typename T::mapped_type>::min()){
+template<typename K,typename T>
+inline void testMin(const std::string key, std::map<K,T>& val, T min = std::numeric_limits<T>::min()){
 for (auto& v : val) testMin(key, v.second, min);
 }
 
@@ -220,7 +220,7 @@ for (auto& v : val) testMin(key, v.second, min);
 /// \param val Parameter value
 /// \param min Lower Threshold
 template<typename T>
-inline typename std::enable_if<std::is_arithmetic<T>::value, void>::type testMax(const std::string key, T& val, T max = std::numeric_limits<T>::max()){
+inline void testMax(const std::string key, T& val, T max = std::numeric_limits<T>::max()){
 if (val > max){
   ROS_WARN_STREAM("Value of " << val << " for "
                   << key << " is greater than maximal allowed. Correcting value to max=" << max);
@@ -234,13 +234,8 @@ if (val > max){
 /// \param val Parameter value
 /// \param min Lower Threshold
 template <typename T>
-inline typename std::enable_if<
-    is_vector<T>::value && std::is_arithmetic<typename T::value_type>::value,
-    void>::type
-testMax(const std::string key, T& val,
-        typename T::value_type min =
-            std::numeric_limits<typename T::value_type>::max()) {
-  for (auto& v : val) testMax(key, v, min);
+inline void testMax(const std::string key, std::vector<T>& val, T max = std::numeric_limits<T>::max()){
+  for (auto& v : val) testMax(key, v, max);
 }
 
 /// \brief Limit parameter to upper bound if parameter is a map.
@@ -248,13 +243,9 @@ testMax(const std::string key, T& val,
 /// \param key Parameter name
 /// \param val Parameter value
 /// \param min Lower Threshold
-template <typename T>
-inline typename std::enable_if<
-    is_map<T>::value && std::is_arithmetic<typename T::mapped_type>::value,
-    void>::type testMax(const std::string key, T& val,
-        typename T::mapped_type min =
-            std::numeric_limits<typename T::mapped_type>::max()) {
-  for (auto& v : val) testMax(key, v.second, min);
+template<typename K,typename T>
+inline void testMax(const std::string key, std::map<K,T>& val, T max = std::numeric_limits<T>::max()){
+  for (auto& v : val) testMax(key, v.second, max);
 }
 
 } // namespace rosparam_handler
