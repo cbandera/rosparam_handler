@@ -61,6 +61,14 @@ params_.toParamServer();
 ```
 This will set all non-const parameters with their current value on the ros parameter server.
 
+## Setting parameters at launch time
+If you want to run your node with parameters other then the default parameters, then they have to be set on the parameter server before the node starts.
+To ease the burden of setting all parameters one after the other, roslaunch has the [rosparam](http://wiki.ros.org/roslaunch/XML/rosparam) argument to load a YAML file containing a whole set of key value pairs.
+Rosparam handler provides a script, to automatically generates a YAML file for you to use. Calling it will generate a file in your current directory.
+```sh
+rosrun rosparam_handler generate_yaml <path/to/Tutorial.params>
+```
+
 ## Python
 All your parameters are fully available in python nodes as well. Just import the parameter file:
 ```python

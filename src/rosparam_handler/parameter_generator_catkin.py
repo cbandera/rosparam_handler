@@ -330,8 +330,15 @@ class ParameterGenerator(object):
         if self.parent:
             eprint("You should not call generate on a group! Call it on the main parameter generator instead!")
 
+        return self._generateImpl()
+
+    def _generateImpl(self):
+        """
+        Implementation level function. Can be overwritten by derived classes.
+        :return:
+        """
         self._generatecfg()
-        self._generatecpp()
+        self._generatehpp()
         self._generatepy()
 
         return 0
@@ -363,7 +370,7 @@ class ParameterGenerator(object):
             f.write(template)
         os.chmod(cfg_file, 509)  # entspricht 775 (octal)
 
-    def _generatecpp(self):
+    def _generatehpp(self):
         """
         Generate C++ Header file, holding the parameter struct.
         :param self:
@@ -416,26 +423,32 @@ class ParameterGenerator(object):
                                               '*/').substitute(type=param['type'], name=name,
                                                                description=param['description'],
                                                                default=self._get_cvalue(param, "default")))
-                from_server.append(Template('    testConstParam($paramname);').substitute(paramname=full_name))
+                from_server.append(Template('    rosparam_handler::testConstParam($paramname);').substitute(paramname=full_name))
             else:
                 param_entries.append(Template('  ${type} ${name}; /*!< ${description} */').substitute(
                     type=param['type'], name=name, description=param['description']))
-                from_server.append(Template('    success &= getParam($paramname, $name$default);').substitute(
+                from_server.append(Template('    success &= rosparam_handler::getParam($paramname, $name$default);').substitute(
                     paramname=full_name, name=name, default=default, description=param['description']))
                 to_server.append(
-                    Template('  setParam(${paramname},${name});').substitute(paramname=full_name, name=name))
+                    Template('  rosparam_handler::setParam(${paramname},${name});').substitute(paramname=full_name, name=name))
 
             # Test for configurable params
             if param['configurable']:
                 from_config.append(Template('    $name = config.$name;').substitute(name=name))
 
             # Test limits
+            if param['is_vector']:
+                ttype = param['type'][12:-1].strip()
+            elif param['is_map']:
+                ttype = param['type'][9:-1].strip()
+            else:
+                ttype = param['type']
             if param['min'] is not None:
-                test_limits.append(Template('    testMin($paramname, $name, $min);').substitute(
-                    paramname=full_name, name=name, min=param['min'], type=param['type']))
+                test_limits.append(Template('    rosparam_handler::testMin<$type>($paramname, $name, $min);').substitute(
+                    paramname=full_name, name=name, min=param['min'], type=ttype))
             if param['max'] is not None:
-                test_limits.append(Template('    testMax($paramname, $name, $max);').substitute(
-                    paramname=full_name, name=name, max=param['max'], type=param['type']))
+                test_limits.append(Template('    rosparam_handler::testMax<$type>($paramname, $name, $max);').substitute(
+                    paramname=full_name, name=name, max=param['max'], type=ttype))
 
             # Add debug output
             string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
@@ -495,6 +508,36 @@ class ParameterGenerator(object):
         init_file = os.path.join(self.py_gen_dir, "param", "__init__.py")
         with open(init_file, 'wa') as f:
             f.write("")
+
+    def _generateyml(self):
+        """
+        Generate .yaml file for roslaunch
+        :param self:
+        :return:
+        """
+        params = self._get_parameters()
+
+        content = "### This file was generated using the rosparam_handler generate_yaml script.\n"
+
+        for entry in params:
+            if not entry["constant"]:
+                content += "\n"
+                content += "# Name:\t" + str(entry["name"]) + "\n"
+                content += "# Desc:\t" + str(entry["description"]) + "\n"
+                content += "# Type:\t" + str(entry["type"]) + "\n"
+                if entry['min'] or entry['max']:
+                    content += "# [min,max]:\t[" + str(entry["min"]) + "/" + str(entry["max"]) + "]" + "\n"
+                if entry["global_scope"]:
+                    content += "# Lives in global namespace!\n"
+                if entry["default"] is not None:
+                    content += str(entry["name"]) + ": " + str(entry["default"]) + "\n"
+                else:
+                    content += str(entry["name"]) + ": \n"
+
+        yaml_file = os.path.join(os.getcwd(), self.classname + "Parameters.yaml")
+
+        with open(yaml_file, 'w') as f:
+            f.write(content)
 
     def _get_parameters(self):
         """
@@ -561,3 +604,10 @@ class ParameterGenerator(object):
         else:
             # Pray and hope that it is a string
             return bool(param)
+
+
+# Create derived class for yaml generation
+class YamlGenerator(ParameterGenerator):
+    def _generateImpl(self):
+        self._generateyml()
+        return 0
