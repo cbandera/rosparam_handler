@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+####### workaround so that the module is found #######
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__),"../../src"))
+######################################################
+
+from rosparam_handler.parameter_generator_catkin import *
+gen = ParameterGenerator()
+
+# Parameters with different types
+gen.add("int_param", paramtype="int", description="An Integer parameter", default=1, configurable=True)
+gen.add("str_param", paramtype="std::string", description="A string parameter", default="param a", configurable=True)
+
+#Syntax : Package, Node, Config Name(The final name will be MyDummyConfig)
+exit(gen.generate("rosparam_handler", "rosparam_handler_test", "Foo"))
