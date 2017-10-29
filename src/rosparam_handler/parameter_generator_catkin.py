@@ -434,7 +434,7 @@ class ParameterGenerator(object):
 
             # Test for configurable params
             if param['configurable']:
-                from_config.append(Template('    $name = config.$name;').substitute(name=name))
+                from_config.append(Template('    casted_ref.$name = config.$name;').substitute(name=name))
 
             # Test limits
             if param['is_vector']:
@@ -451,7 +451,7 @@ class ParameterGenerator(object):
                     paramname=full_name, name=name, max=param['max'], type=ttype))
 
             # Add debug output
-            string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
+            string_representation.append(Template('      << "\t" << $namespace << "$name:" << $name << '
                                                   '"\\n"\n').substitute(namespace=namespace, name=name))
 
         param_entries = "\n".join(param_entries)
