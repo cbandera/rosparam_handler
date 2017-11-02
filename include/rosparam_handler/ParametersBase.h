@@ -15,6 +15,7 @@
 #include <ros/param.h>
 #include <ros/node_handle.h>
 #include <rosparam_handler/utilities.hpp>
+#include <rosparam_handler/pointer.hpp>
 
 namespace rosparam_handler {
 
@@ -83,8 +84,6 @@ protected:
   const std::string privateNamespace;
   const std::string nodeName;
 };
-
-using ParametersPtr = boost::shared_ptr<ParametersBase>;
 
 } // namespace rosparam_handler
 
