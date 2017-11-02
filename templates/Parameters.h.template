@@ -79,14 +79,14 @@ namespace rosparam_handler
 
   template<>
   inline void ParametersBase::fromConfigImpl<${pkgname}::${ClassName}Config>(
-    const ${pkgname}::${ClassName}Config& config, const uint32_t level )
+    const ${pkgname}::${ClassName}Config& config, const uint32_t /*level*/ )
   {
     try {
 		  ${pkgname}::${ClassName}Parameters& casted_ref = dynamic_cast<${pkgname}::${ClassName}Parameters&>(*this);
 
       $fromConfig
 	  }
-	  catch (const std::bad_cast& e)
+	  catch (const std::bad_cast& /*e*/)
 	  {
 		  ROS_FATAL("In ParametersBase::fromConfig, bad cast to type ${pkgname}::${ClassName}Parameters !");
 		  rosparam_handler::exit("In ParametersBase::fromConfig, bad cast to type ${pkgname}::${ClassName}Parameters !");
