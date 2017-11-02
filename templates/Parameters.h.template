@@ -32,6 +32,8 @@ struct ${ClassName}Parameters : public rosparam_handler::ParametersBase {
 $toParamServer
   }
 
+  /// \brief the parameters members.
+
   $parameters
 
 protected:
@@ -50,7 +52,7 @@ protected:
 
     }
 
-    /// \brief Print function to be called from base stream operator for printing parameter struct
+    /// \brief print. A helper function to be called from base stream operator for printing parameter struct
     inline std::ostream& print(std::ostream& os) const override
     {
       os << "[" << nodeName << "]\nNode " << nodeName << " has the following parameters:\n"
@@ -72,7 +74,8 @@ $non_default_params    );
 namespace rosparam_handler
 {
 
-  // Specialize base class fromConfigImpl.
+  /// \brief Specialize base class fromConfigImpl.
+  /// to handle ${pkgname}::${ClassName}Config
 
   template<>
   inline void ParametersBase::fromConfigImpl<${pkgname}::${ClassName}Config>(

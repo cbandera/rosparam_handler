@@ -64,11 +64,16 @@ struct ParametersBase {
 
 protected:
 
+  /// \brief The actual implementation of 'fromParamServer'
+  /// overriden by the derived class
   virtual bool fromParamServerImpl() = 0;
 
+  /// \brief The actual implementation os 'fromConfig' specialized
+  /// for the 'DerivedConfig' type.
   template <typename T>
   void fromConfigImpl(const T& config, const uint32_t level);
 
+  /// \brief A helper function for ostram operator <<
   virtual std::ostream& print(std::ostream& os) const = 0;
 
   /// \brief Issue a warning about missing default parameters.
