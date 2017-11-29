@@ -19,6 +19,18 @@ struct ParametersBase;
 /// \brief base pointer declaration
 using ParametersPtr = boost::shared_ptr<ParametersBase>;
 
+template <typename T>
+T static_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
+{
+  return boost::static_pointer_cast<T>(ptr);
+}
+
+template <typename T>
+T dynamic_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
+{
+  return boost::dynamic_pointer_cast<T>(ptr);
+}
+
 } /* namespace rosparam_handler */
 
 #endif /* _ROSPARAM_HANDLER_POINTER_H_ */
