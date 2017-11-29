@@ -20,13 +20,13 @@ struct ParametersBase;
 using ParametersPtr = boost::shared_ptr<ParametersBase>;
 
 template <typename T>
-T static_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
+boost::shared_ptr<T> static_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
 {
   return boost::static_pointer_cast<T>(ptr);
 }
 
 template <typename T>
-T dynamic_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
+boost::shared_ptr<T> dynamic_parameters_cast(const rosparam_handler::ParametersPtr& ptr)
 {
   return boost::dynamic_pointer_cast<T>(ptr);
 }
