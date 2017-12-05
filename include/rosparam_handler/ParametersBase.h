@@ -27,7 +27,20 @@ struct ParametersBase {
     privateNamespace{private_node_handle.getNamespace() + "/"},
     nodeName{rosparam_handler::getNodeName(private_node_handle)} {}
 
+  ParametersBase(const ParametersBase& o)
+  : globalNamespace(o.globalNamespace)
+  , privateNamespace(o.privateNamespace)
+  , nodeName(o.nodeName) {}
+
   virtual ~ParametersBase() = default;
+
+  ParametersBase& operator=(const ParametersBase& o)
+  {
+    globalNamespace = o.globalNamespace;
+    privateNamespace = o.privateNamespace;
+    nodeName = o.nodeName;
+    return *this;
+  }
 
   /// \brief Get values from parameter server
   ///
