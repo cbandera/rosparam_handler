@@ -25,7 +25,22 @@ struct ${ClassName}Parameters : public rosparam_handler::ParametersBase {
   using Config = ${ClassName}Config;
 
   inline ${ClassName}Parameters(const ros::NodeHandle& private_node_handle) :
-    ParametersBase(private_node_handle) {}
+    rosparam_handler::ParametersBase(private_node_handle) {}
+
+  inline ${ClassName}Parameters(const ${ClassName}Parameters& o)
+  : ParametersBase(o)
+  $copyConstructor
+
+  {
+    //
+  }
+
+  ${ClassName}Parameters& operator=(const ${ClassName}Parameters& o)
+  {
+    rosparam_handler::ParametersBase::operator=(o);
+    $assignOperator
+    return *this;
+  }
 
   /// \brief Set parameters on ROS parameter server.
   void toParamServer() override {

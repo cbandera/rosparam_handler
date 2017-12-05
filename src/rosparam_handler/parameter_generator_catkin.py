@@ -383,6 +383,8 @@ class ParameterGenerator(object):
             template = f.read()
 
         param_entries = []
+        copy_constructor_entries = []
+        assignment_operator_entries = []
         string_representation = []
         from_server = []
         to_server = []
@@ -427,6 +429,8 @@ class ParameterGenerator(object):
             else:
                 param_entries.append(Template('  ${type} ${name}; /*!< ${description} */').substitute(
                     type=param['type'], name=name, description=param['description']))
+                copy_constructor_entries.append(Template(' , ${name}(o.${name})').substitute(name=name))
+                assignment_operator_entries.append(Template('  ${name} = o.${name};').substitute(name=name))
                 from_server.append(Template('    success &= rosparam_handler::getParam($paramname, $name$default);').substitute(
                     paramname=full_name, name=name, default=default, description=param['description']))
                 to_server.append(
@@ -455,6 +459,8 @@ class ParameterGenerator(object):
                                                   '"\\n"\n').substitute(namespace=namespace, name=name))
 
         param_entries = "\n".join(param_entries)
+        copy_constructor_entries = "\n".join(copy_constructor_entries)
+        assignment_operator_entries = "\n".join(assignment_operator_entries)
         string_representation = "".join(string_representation)
         non_default_params = "".join(non_default_params)
         from_server = "\n".join(from_server)
@@ -463,7 +469,10 @@ class ParameterGenerator(object):
         test_limits = "\n".join(test_limits)
 
         content = Template(template).substitute(pkgname=self.pkgname, ClassName=self.classname,
-                                                parameters=param_entries, fromConfig=from_config,
+                                                parameters=param_entries,
+                                                copyConstructor=copy_constructor_entries,
+                                                assignOperator=assignment_operator_entries,
+                                                fromConfig=from_config,
                                                 fromParamServer=from_server,
                                                 string_representation=string_representation,
                                                 non_default_params=non_default_params, nodename=self.nodename,
