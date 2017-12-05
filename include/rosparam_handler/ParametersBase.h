@@ -80,9 +80,9 @@ protected:
   /// \brief Issue a warning about missing default parameters.
   virtual void missingParamsWarning() = 0;
 
-  const std::string globalNamespace = {"/"};
-  const std::string privateNamespace;
-  const std::string nodeName;
+  std::string globalNamespace = {"/"};
+  std::string privateNamespace;
+  std::string nodeName;
 };
 
 } // namespace rosparam_handler
