@@ -6,7 +6,7 @@ A unified parameter handler for nodes with automatic code generation.
 Save time on defining your parameters. No more redundant code. Easy error checking. Make them dynamic with a single flag.
 
 - Maintainer status: maintained
-- Maintainer: Claudio Bandera <cbandera@posteo.de>
+- Maintainer: Jeremie Deray <jeremie.deray@pal-robotics.com>
 - Author: Claudio Bandera <cbandera@posteo.de>
 - License: BSD
 - Bug / feature tracker: https://github.com/cbandera/rosparam_handler/issues
