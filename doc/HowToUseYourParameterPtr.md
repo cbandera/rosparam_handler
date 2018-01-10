@@ -22,7 +22,7 @@ You can now add an instance of the base parameter pointer to your class:
 rosparam_tutorials::ParametersPtr params_ptr_;
 ```
 
-## Initializing the pointer.
+## Initializing the pointer
 When initializing your node, the params pointer `params_ptr_` must be instantiated to the appropriate parameter type with a private `NodeHandle`.
 
 ```cpp
@@ -49,7 +49,7 @@ MyNodeClass::MyOtherClass()
 }
 ```
 
-## Initializing the struct.
+## Initializing the struct
 
 The call to `fromParamServer()` is done the very same manner as for a normal parameter object.
 It will take care of getting all parameter values from the parameter server, checking their type, and checking that a default value is set, if you haven't provided one on your own. If you have specified a default value, but the parameter is not yet present on the parameter server, it will be set. When min and max values are specified, these bounds will be checked as well.
@@ -69,6 +69,34 @@ params_ptr->fromParamServer();
 ```
 Note: If you have set the logger level for your node to debug, you will get information on which values have been retrieved.  
 Note: If you use nodelets, you have to use the `getPrivateNodeHandle()` function instead.
+
+## Retrieving the actual parameter
+
+Since you are using here a `ParametersPtr`, you cannot access directly the parameters held by the structure:
+```cpp
+params_ptr_->my_int = 42; // Will NOT compile
+```
+
+To do so, you have to cast the base pointer to its appropriate derived type:
+```cpp
+boost::shared_ptr<TutorialParameters> params_ptr_cast = rosparam_handler::dynamic_parameters_cast<TutorialParameters>(params_ptr_);
+assert(params_ptr_cast != nullptr);
+
+if (params_ptr_cast != nullptr)
+{
+  params_ptr_cast->my_int = 42;
+}
+```
+Both dynamic and static cast helper function are provided:
+```cpp
+auto my_cast = rosparam_handler::dynamic_parameters_cast<DerivedType>(ptr);
+auto my_cast = rosparam_handler::static_parameters_cast<DerivedType>(ptr);
+```
+which simply are aliases to:
+```cpp
+auto my_cast = boost::dynamic_pointer_cast<DerivedType>(ptr);
+auto my_cast = boost::static_pointer_cast_cast<DerivedType>(ptr);
+```
 
 ## Using dynamic_reconfigure
 Your dynamic_reconfigure callback can now look as simple as:
