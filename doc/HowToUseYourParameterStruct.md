@@ -54,6 +54,17 @@ This will update all values that were specified as configurable. At the same tim
 
 You can find a running version of this example code in the [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)-Repository
 
+## From another parameters structure
+You can also simply copy your current parameters:
+```cpp
+rosparam_tutorials::TutorialParameters params_{ros::NodeHandle("~")}
+params_.fromParamServer();
+
+rosparam_tutorials::TutorialParameters params_copy_(params_);
+// equivalently
+params_copy_ = params_;
+```
+
 ## Setting parameters on the server
 If you change your parameters at runtime from within the code, you can upload the current state of the parameters with
 ```cpp
