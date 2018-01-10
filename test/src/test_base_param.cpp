@@ -45,6 +45,12 @@ public:
       return nh_.getNamespace();
     }
 
+    template <typename T>
+    void configCallback(T& config, uint32_t /*level*/)
+    {
+      params_ptr_->fromConfig(config);
+    }
+
     rosparam_handler::ParametersPtr params_ptr_;
 
     ros::NodeHandle nh_ = ros::NodeHandle("~");
@@ -56,14 +62,8 @@ public:
     {
       init<FooParameters>();
 
-      dynamic_reconfigure::Server<ConfigA>::CallbackType cb;
-      cb = boost::bind(&Foo::configCallback, this, _1, _2);
+      auto cb = boost::bind(&DummyBase::configCallback<ConfigA>, this, _1, _2);
       dr_srv_.setCallback(cb);
-    }
-
-    void configCallback(ConfigA &config, uint32_t level)
-    {
-      params_ptr_->fromConfig(config);
     }
 
     dynamic_reconfigure::Server<ConfigA> dr_srv_;
@@ -75,14 +75,8 @@ public:
     {
       init<BarParameters>();
 
-      dynamic_reconfigure::Server<ConfigB>::CallbackType cb;
-      cb = boost::bind(&Bar::configCallback, this, _1, _2);
+      auto cb = boost::bind(&DummyBase::configCallback<ConfigB>, this, _1, _2);
       dr_srv_.setCallback(cb);
-    }
-
-    void configCallback(ConfigB &config, uint32_t level)
-    {
-      params_ptr_->fromConfig(config);
     }
 
     dynamic_reconfigure::Server<ConfigB> dr_srv_;
@@ -100,8 +94,19 @@ TEST_F(TestRosparamHandlerBase, Defaults) {
     boost::shared_ptr<FooParameters> foo_param_ptr;
     boost::shared_ptr<BarParameters> bar_param_ptr;
 
+    // Test casting
     ASSERT_NO_THROW(foo_param_ptr = boost::dynamic_pointer_cast<FooParameters>(foo_.params_ptr_));
     ASSERT_NO_THROW(bar_param_ptr = boost::dynamic_pointer_cast<BarParameters>(bar_.params_ptr_));
+
+    ASSERT_NE(nullptr, foo_param_ptr);
+    ASSERT_NE(nullptr, bar_param_ptr);
+
+    // Test casting with helper function
+    ASSERT_NO_THROW(foo_param_ptr = rosparam_handler::dynamic_parameters_cast<FooParameters>(foo_.params_ptr_));
+    ASSERT_NO_THROW(bar_param_ptr = rosparam_handler::dynamic_parameters_cast<BarParameters>(bar_.params_ptr_));
+
+    ASSERT_NE(nullptr, foo_param_ptr);
+    ASSERT_NE(nullptr, bar_param_ptr);
 
     ASSERT_EQ(1, foo_param_ptr->int_param);
     ASSERT_EQ("param a", foo_param_ptr->str_param);
@@ -118,8 +123,11 @@ TEST_F(TestRosparamHandlerBase, DefaultsOnParamServer) {
     boost::shared_ptr<FooParameters> foo_param_ptr;
     boost::shared_ptr<BarParameters> bar_param_ptr;
 
-    ASSERT_NO_THROW(foo_param_ptr = boost::dynamic_pointer_cast<FooParameters>(foo_.params_ptr_));
-    ASSERT_NO_THROW(bar_param_ptr = boost::dynamic_pointer_cast<BarParameters>(bar_.params_ptr_));
+    ASSERT_NO_THROW(foo_param_ptr = rosparam_handler::dynamic_parameters_cast<FooParameters>(foo_.params_ptr_));
+    ASSERT_NO_THROW(bar_param_ptr = rosparam_handler::dynamic_parameters_cast<BarParameters>(bar_.params_ptr_));
+
+    ASSERT_NE(nullptr, foo_param_ptr);
+    ASSERT_NE(nullptr, bar_param_ptr);
 
     ros::NodeHandle nh("~");
 
@@ -154,8 +162,11 @@ TEST_F(TestRosparamHandlerBase, SetParamOnServer) {
     boost::shared_ptr<FooParameters> foo_param_ptr;
     boost::shared_ptr<BarParameters> bar_param_ptr;
 
-    ASSERT_NO_THROW(foo_param_ptr = boost::dynamic_pointer_cast<FooParameters>(foo_.params_ptr_));
-    ASSERT_NO_THROW(bar_param_ptr = boost::dynamic_pointer_cast<BarParameters>(bar_.params_ptr_));
+    ASSERT_NO_THROW(foo_param_ptr = rosparam_handler::dynamic_parameters_cast<FooParameters>(foo_.params_ptr_));
+    ASSERT_NO_THROW(bar_param_ptr = rosparam_handler::dynamic_parameters_cast<BarParameters>(bar_.params_ptr_));
+
+    ASSERT_NE(nullptr, foo_param_ptr);
+    ASSERT_NE(nullptr, bar_param_ptr);
 
     foo_param_ptr->int_param = 9;
     foo_param_ptr->str_param = "Hello";
@@ -199,8 +210,11 @@ TEST_F(TestRosparamHandlerBase, DynamicReconf)
   boost::shared_ptr<FooParameters> foo_param_ptr;
   boost::shared_ptr<BarParameters> bar_param_ptr;
 
-  ASSERT_NO_THROW(foo_param_ptr = boost::dynamic_pointer_cast<FooParameters>(foo_.params_ptr_));
-  ASSERT_NO_THROW(bar_param_ptr = boost::dynamic_pointer_cast<BarParameters>(bar_.params_ptr_));
+  ASSERT_NO_THROW(foo_param_ptr = rosparam_handler::dynamic_parameters_cast<FooParameters>(foo_.params_ptr_));
+  ASSERT_NO_THROW(bar_param_ptr = rosparam_handler::dynamic_parameters_cast<BarParameters>(bar_.params_ptr_));
+
+  ASSERT_NE(nullptr, foo_param_ptr);
+  ASSERT_NE(nullptr, bar_param_ptr);
 
   dynamic_reconfigure::ReconfigureRequest  srv_req;
   dynamic_reconfigure::ReconfigureResponse srv_resp;
