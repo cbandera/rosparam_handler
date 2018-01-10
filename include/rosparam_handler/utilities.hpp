@@ -84,15 +84,15 @@ inline void showNodeInfo() {
 
     std::ostringstream msg_subscr, msg_advert;
     for (auto const& t : subscribed_topics) {
-        msg_subscr << t << std::endl;
+        msg_subscr << t << "\n";
     }
     for (auto const& t : advertised_topics) {
-        msg_advert << t << std::endl;
+        msg_advert << t << "\n";
     }
 
-    ROS_INFO_STREAM("Started '" << getName() << "' in namespace '" << getNamespace() << "'." << std::endl
-                                << "Subscribed topics: " << std::endl
-                                << msg_subscr.str() << "Advertised topics: " << std::endl
+    ROS_INFO_STREAM("Started '" << getName() << "' in namespace '" << getNamespace() << "'.\n"
+                                << "Subscribed topics:\n"
+                                << msg_subscr.str() << "Advertised topics:\n"
                                 << msg_advert.str());
 }
 
