@@ -9,10 +9,10 @@ from rosparam_handler.parameter_generator_catkin import *
 gen = ParameterGenerator()
 
 # Parameters with different types
-gen.add("int_param_w_default", paramtype="int", description="An Integer parameter", default=1)
-gen.add("double_param_w_default", paramtype="double",description="A double parameter", default=1.1)
-gen.add("str_param_w_default", paramtype="std::string", description="A string parameter", default="Hello World")
-gen.add("bool_param_w_default", paramtype="bool", description="A Boolean parameter", default=True)
+gen.add("int_param_w_default", paramtype="int", description="An Integer parameter", default=1, configurable=True)
+gen.add("double_param_w_default", paramtype="double",description="A double parameter", default=1.1, configurable=True)
+gen.add("str_param_w_default", paramtype="std::string", description="A string parameter", default="Hello World", configurable=True)
+gen.add("bool_param_w_default", paramtype="bool", description="A Boolean parameter", default=True, configurable=True)
 
 gen.add("vector_int_param_w_default", paramtype="std::vector<int>", description="A vector of int parameter", default=[1,2,3])
 gen.add("vector_double_param_w_default", paramtype="std::vector<double>", description="A vector of double parameter", default=[1.1, 1.2, 1.3])
