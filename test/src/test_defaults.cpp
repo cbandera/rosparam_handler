@@ -6,7 +6,7 @@ typedef rosparam_handler::DefaultsParameters ParamType;
 typedef rosparam_handler::DefaultsConfig ConfigType;
 
 TEST(RosparamHandler, Defaults) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~defaults"));
     ASSERT_NO_THROW(testParams.fromParamServer());
 
     ASSERT_EQ(1, testParams.int_param_w_default);
@@ -26,7 +26,7 @@ TEST(RosparamHandler, Defaults) {
 }
 
 TEST(RosparamHandler, DefaultsOnParamServer) {
-    ros::NodeHandle nh("~");
+    ros::NodeHandle nh("~defaults_on_param_server");
     ParamType testParams(nh);
     ASSERT_NO_THROW(testParams.fromParamServer());
 
@@ -84,7 +84,7 @@ TEST(RosparamHandler, DefaultsOnParamServer) {
 }
 
 TEST(RosparamHandler, SetParamOnServer) {
-    ros::NodeHandle nh("~");
+    ros::NodeHandle nh("~set_param_on_server");
     ParamType testParams(nh);
     ASSERT_NO_THROW(testParams.fromParamServer());
 

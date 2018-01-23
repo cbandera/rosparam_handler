@@ -6,7 +6,7 @@ typedef rosparam_handler::DefaultsAtLaunchParameters ParamType;
 typedef rosparam_handler::DefaultsAtLaunchConfig ConfigType;
 
 TEST(RosparamHandler, DefaultsAtLaunch) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~defaults_at_launch"));
     ASSERT_NO_THROW(testParams.fromParamServer());
 
     ASSERT_EQ(1, testParams.int_param_wo_default);

@@ -6,7 +6,7 @@ typedef rosparam_handler::MinMaxParameters ParamType;
 typedef rosparam_handler::MinMaxConfig ConfigType;
 
 TEST(RosparamHandler, MinMax) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~min_max"));
     ASSERT_NO_THROW(testParams.fromParamServer());
 
     ASSERT_EQ(2, testParams.int_param_w_minmax);

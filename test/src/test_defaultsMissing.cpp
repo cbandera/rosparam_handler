@@ -6,6 +6,6 @@ typedef rosparam_handler::DefaultsMissingParameters ParamType;
 typedef rosparam_handler::DefaultsMissingConfig ConfigType;
 
 TEST(RosparamHandler, DefaultsMissing) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~default_missing"));
     ASSERT_THROW(testParams.fromParamServer(), std::runtime_error);
 }

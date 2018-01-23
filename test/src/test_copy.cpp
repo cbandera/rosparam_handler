@@ -5,7 +5,7 @@
 typedef rosparam_handler::DefaultsParameters ParamType;
 
 TEST(RosparamHandler, CopyInit) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~copy_init"));
     ASSERT_NO_THROW(testParams.fromParamServer());
 
     ASSERT_EQ(1, testParams.int_param_w_default);
@@ -53,7 +53,7 @@ TEST(RosparamHandler, CopyInit) {
 }
 
 TEST(RosparamHandler, CopyAssign) {
-    ParamType testParams(ros::NodeHandle("~"));
+    ParamType testParams(ros::NodeHandle("~copy_assign"));
     ASSERT_NO_THROW(testParams.fromParamServer());
 
     ASSERT_EQ(1, testParams.int_param_w_default);

@@ -12,7 +12,7 @@ class TestDynamicReconfigure : public testing::Test
 public:
 
   TestDynamicReconfigure()
-    : nh("~")
+    : nh("~dynamic_reconfigure")
     , testParams(nh)
     , drSrv(nh)
   {
@@ -36,12 +36,6 @@ public:
 
 TEST_F(TestDynamicReconfigure, DynamicReconf)
 {
-  // Delete in case they are still on the server.
-  nh.deleteParam("int_param_w_default");
-  nh.deleteParam("double_param_w_default");
-  nh.deleteParam("str_param_w_default");
-  nh.deleteParam("bool_param_w_default");
-
   ASSERT_NO_THROW(testParams.fromParamServer());
 
   ASSERT_EQ(1, testParams.int_param_w_default);
