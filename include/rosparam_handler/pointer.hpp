@@ -18,6 +18,7 @@ struct ParametersBase;
 
 /// \brief base pointer declaration
 using ParametersPtr = boost::shared_ptr<ParametersBase>;
+using ParametersConstPtr = boost::shared_ptr<const ParametersBase>;
 
 template <typename T>
 boost::shared_ptr<T> static_parameters_cast(const rosparam_handler::ParametersPtr& ptr)

@@ -23,6 +23,8 @@ namespace ${pkgname} {
 struct ${ClassName}Parameters : public rosparam_handler::ParametersBase {
 
   using Config = ${ClassName}Config;
+  using Ptr = boost::shared_ptr<${ClassName}Parameters>;
+  using ConstPtr = boost::shared_ptr<const ${ClassName}Parameters>;
 
   inline ${ClassName}Parameters(const ros::NodeHandle& private_node_handle) :
     rosparam_handler::ParametersBase(private_node_handle) {}
@@ -82,6 +84,9 @@ $non_default_params    );
   }
 
 };
+
+using ${ClassName}ParametersPtr = ${ClassName}Parameters::Ptr;
+using ${ClassName}ParametersConstPtr = ${ClassName}Parameters::ConstPtr;
 
 } // namespace ${pkgname}
 
