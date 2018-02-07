@@ -1,0 +1,22 @@
+# Use this file to specify parameters, that do not have default values.
+# YAML Files can also be helpfull if you want to save parameters for different use-cases.
+# In any way: Default values should go into the .params file!
+#
+# Use 'key: value' pairs, e.g.
+# string: 'foo'
+# integer: 1234
+# float: 1234.5
+# boolean: true
+# vector: [1.0, 2.0, 3.4]
+# map: {"a": "b", "c": "d"}
+
+int_param_wo_default: 1
+double_param_wo_default: 1.1
+str_param_wo_default: "Hello World"
+bool_param_wo_default: true
+vector_int_param_wo_default: [1,2,3]
+vector_double_param_wo_default: [1.1, 1.2, 1.3]
+vector_bool_param_wo_default: [false, true]
+vector_string_param_wo_default: ["Hello","World"]
+map_param_wo_default: {"Hello": "World"}
+enum_param_wo_default: 1

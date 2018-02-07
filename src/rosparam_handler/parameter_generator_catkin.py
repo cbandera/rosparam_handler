@@ -41,8 +41,6 @@ def eprint(*args, **kwargs):
     sys.exit(1)
 
 
-# TODO add group
-
 class ParameterGenerator(object):
     """Automatic config file and header generator"""
 
@@ -58,12 +56,14 @@ class ParameterGenerator(object):
             self.group = "gen"
         self.group_variable = filter(str.isalnum, self.group)
 
-        if len(sys.argv) != 4:
-            eprint("ParameterGenerator: Unexpected amount of args, did you try to call this directly? You shouldn't do this!")
+        if len(sys.argv) != 5:
+            eprint(
+                "ParameterGenerator: Unexpected amount of args, did you try to call this directly? You shouldn't do this!")
 
         self.dynconfpath = sys.argv[1]
         self.share_dir = sys.argv[2]
         self.cpp_gen_dir = sys.argv[3]
+        self.py_gen_dir = sys.argv[4]
 
         self.pkgname = None
         self.nodename = None
@@ -93,7 +93,7 @@ class ParameterGenerator(object):
 
         entry_strings = [str(e) for e in entry_strings]  # Make sure we only get strings
         if default is None:
-            default = entry_strings[0]
+            default = 0
         else:
             default = entry_strings.index(default)
         self.add(name=name, paramtype="int", description=description, edit_method=name, default=default,
@@ -110,7 +110,6 @@ class ParameterGenerator(object):
 
         - If no default value is given, you need to specify one in your launch file
         - Global parameters, vectors, maps and constant params can not be configurable
-        - Global parameters, vectors and maps can not have a default, min or max value
 
         :param self:
         :param name: The Name of you new parameter
@@ -159,10 +158,11 @@ class ParameterGenerator(object):
         :return:
         """
 
-        if param['type'].strip() == "std::string" and (param['max'] is not None or param['min'] is not None):
-            eprint(param['name'], "Max or min specified for for variable of type string")
-
         in_type = param['type'].strip()
+        if param['max'] is not None or param['min'] is not None:
+            if in_type in ["std::string", "bool"]:
+                eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
+
         if in_type.startswith('std::vector'):
             param['is_vector'] = True
         if in_type.startswith('std::map'):
@@ -172,31 +172,33 @@ class ParameterGenerator(object):
             if (param['max'] is not None or param['min'] is not None):
                 ptype = in_type[12:-1].strip()
                 if ptype == "std::string":
-                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
 
         if (param['is_map']):
             if (param['max'] is not None or param['min'] is not None):
                 ptype = in_type[9:-1].split(',')
                 if len(ptype) != 2:
-                    eprint(param['name'], "Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
+                    eprint(param['name'],
+                           "Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
                            "parameter %s" % in_type)
                 ptype = ptype[1].strip()
                 if ptype == "std::string":
-                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % param['type'])
+                    eprint(param['name'], "Max and min can not be specified for variable of type %s" % in_type)
 
         pattern = r'^[a-zA-Z][a-zA-Z0-9_]*$'
         if not re.match(pattern, param['name']):
             eprint(param['name'], "The name of field does not follow the ROS naming conventions, "
-                   "see http://wiki.ros.org/ROS/Patterns/Conventions")
+                                  "see http://wiki.ros.org/ROS/Patterns/Conventions")
         if param['configurable'] and (
-           param['global_scope'] or param['is_vector'] or param['is_map'] or param['constant']):
-            eprint(param['name'], "Global Parameters, vectors, maps and constant params can not be declared configurable! ")
+                            param['global_scope'] or param['is_vector'] or param['is_map'] or param['constant']):
+            eprint(param['name'],
+                   "Global Parameters, vectors, maps and constant params can not be declared configurable! ")
         if param['global_scope'] and param['default'] is not None:
             eprint(param['name'], "Default values for global parameters should not be specified in node! ")
         if param['constant'] and param['default'] is None:
             eprint(param['name'], "Constant parameters need a default value!")
         if param['name'] in [p['name'] for p in self.parameters]:
-            eprint(param['name'],"Parameter with the same name exists already")
+            eprint(param['name'], "Parameter with the same name exists already")
         if param['edit_method'] == '':
             param['edit_method'] = '""'
         elif param['edit_method'] != '""':
@@ -211,12 +213,12 @@ class ParameterGenerator(object):
             ptype = in_type[9:-1].split(',')
             if len(ptype) != 2:
                 eprint(param['name'], "Wrong syntax used for setting up std::map<... , ...>: You provided '%s' with "
-                       "parameter %s" % in_type)
+                                      "parameter %s" % in_type)
             ptype[0] = ptype[0].strip()
             ptype[1] = ptype[1].strip()
             if ptype[0] != "std::string":
                 eprint(param['name'], "Can not setup map with %s as key type. Only std::map<std::string, "
-                       "...> are allowed" % ptype[0])
+                                      "...> are allowed" % ptype[0])
             self._test_primitive_type(param['name'], ptype[0])
             self._test_primitive_type(param['name'], ptype[1])
             param['type'] = 'std::map<{},{}>'.format(ptype[0], ptype[1])
@@ -278,7 +280,7 @@ class ParameterGenerator(object):
         :return: C++ compatible representation
         """
         values = param[field]
-        assert(isinstance(values, list))
+        assert (isinstance(values, list))
         form = ""
         for value in values:
             if param['type'] == 'std::vector<std::string>':
@@ -299,7 +301,7 @@ class ParameterGenerator(object):
         :return: C++ compatible representation
         """
         values = param[field]
-        assert(isinstance(values, dict))
+        assert (isinstance(values, dict))
         form = ""
         for key, value in values.items():
             if param['type'] == 'std::map<std::string,std::string>':
@@ -328,8 +330,16 @@ class ParameterGenerator(object):
         if self.parent:
             eprint("You should not call generate on a group! Call it on the main parameter generator instead!")
 
+        return self._generateImpl()
+
+    def _generateImpl(self):
+        """
+        Implementation level function. Can be overwritten by derived classes.
+        :return:
+        """
         self._generatecfg()
-        self._generatecpp()
+        self._generatehpp()
+        self._generatepy()
 
         return 0
 
@@ -344,7 +354,6 @@ class ParameterGenerator(object):
             template = f.read()
 
         param_entries = self._generate_param_entries()
-        print(param_entries)
 
         param_entries = "\n".join(param_entries)
         template = Template(template).substitute(pkgname=self.pkgname, nodename=self.nodename,
@@ -361,7 +370,7 @@ class ParameterGenerator(object):
             f.write(template)
         os.chmod(cfg_file, 509)  # entspricht 775 (octal)
 
-    def _generatecpp(self):
+    def _generatehpp(self):
         """
         Generate C++ Header file, holding the parameter struct.
         :param self:
@@ -376,6 +385,7 @@ class ParameterGenerator(object):
         param_entries = []
         string_representation = []
         from_server = []
+        to_server = []
         non_default_params = []
         from_config = []
         test_limits = []
@@ -413,41 +423,51 @@ class ParameterGenerator(object):
                                               '*/').substitute(type=param['type'], name=name,
                                                                description=param['description'],
                                                                default=self._get_cvalue(param, "default")))
-                from_server.append(Template('    testConstParam($paramname);').substitute(paramname=full_name))
+                from_server.append(Template('    rosparam_handler::testConstParam($paramname);').substitute(paramname=full_name))
             else:
                 param_entries.append(Template('  ${type} ${name}; /*!< ${description} */').substitute(
                     type=param['type'], name=name, description=param['description']))
-                from_server.append(Template('    getParam($paramname, $name$default);').substitute(
+                from_server.append(Template('    success &= rosparam_handler::getParam($paramname, $name$default);').substitute(
                     paramname=full_name, name=name, default=default, description=param['description']))
+                to_server.append(
+                    Template('  rosparam_handler::setParam(${paramname},${name});').substitute(paramname=full_name, name=name))
 
             # Test for configurable params
             if param['configurable']:
                 from_config.append(Template('    $name = config.$name;').substitute(name=name))
 
             # Test limits
+            if param['is_vector']:
+                ttype = param['type'][12:-1].strip()
+            elif param['is_map']:
+                ttype = param['type'][9:-1].strip()
+            else:
+                ttype = param['type']
             if param['min'] is not None:
-                test_limits.append(Template('    testMin<$type>($paramname, $name, $min);').substitute(
-                    paramname=full_name, name=name, min=param['min'], type=param['type']))
+                test_limits.append(Template('    rosparam_handler::testMin<$type>($paramname, $name, $min);').substitute(
+                    paramname=full_name, name=name, min=param['min'], type=ttype))
             if param['max'] is not None:
-                test_limits.append(Template('    testMax<$type>($paramname, $name, $max);').substitute(
-                    paramname=full_name, name=name, max=param['max'], type=param['type']))
+                test_limits.append(Template('    rosparam_handler::testMax<$type>($paramname, $name, $max);').substitute(
+                    paramname=full_name, name=name, max=param['max'], type=ttype))
 
             # Add debug output
             string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
-                                         '"\\n"\n').substitute(namespace=namespace, name=name))
+                                                  '"\\n"\n').substitute(namespace=namespace, name=name))
 
         param_entries = "\n".join(param_entries)
         string_representation = "".join(string_representation)
         non_default_params = "".join(non_default_params)
         from_server = "\n".join(from_server)
+        to_server = "\n".join(to_server)
         from_config = "\n".join(from_config)
         test_limits = "\n".join(test_limits)
 
         content = Template(template).substitute(pkgname=self.pkgname, ClassName=self.classname,
                                                 parameters=param_entries, fromConfig=from_config,
-                                                fromParamServer=from_server, string_representation=string_representation,
+                                                fromParamServer=from_server,
+                                                string_representation=string_representation,
                                                 non_default_params=non_default_params, nodename=self.nodename,
-                                                test_limits=test_limits)
+                                                test_limits=test_limits, toParamServer=to_server)
 
         header_file = os.path.join(self.cpp_gen_dir, self.classname + "Parameters.h")
         try:
@@ -457,6 +477,66 @@ class ParameterGenerator(object):
             # Stupid error, sometimes the directory exists anyway
             pass
         with open(header_file, 'w') as f:
+            f.write(content)
+
+    def _generatepy(self):
+        """
+        Generate Python parameter file
+        :param self:
+        :return:
+        """
+        params = self._get_parameters()
+        paramDescription = str(params)
+
+        # Read in template file
+        templatefile = os.path.join(self.dynconfpath, "templates", "Parameters.py.template")
+        with open(templatefile, 'r') as f:
+            template = f.read()
+
+        content = Template(template).substitute(pkgname=self.pkgname, ClassName=self.classname,
+                                                paramDescription=paramDescription)
+
+        py_file = os.path.join(self.py_gen_dir, "param", self.classname + "Parameters.py")
+        try:
+            if not os.path.exists(os.path.dirname(py_file)):
+                os.makedirs(os.path.dirname(py_file))
+        except OSError:
+            # Stupid error, sometimes the directory exists anyway
+            pass
+        with open(py_file, 'w') as f:
+            f.write(content)
+        init_file = os.path.join(self.py_gen_dir, "param", "__init__.py")
+        with open(init_file, 'wa') as f:
+            f.write("")
+
+    def _generateyml(self):
+        """
+        Generate .yaml file for roslaunch
+        :param self:
+        :return:
+        """
+        params = self._get_parameters()
+
+        content = "### This file was generated using the rosparam_handler generate_yaml script.\n"
+
+        for entry in params:
+            if not entry["constant"]:
+                content += "\n"
+                content += "# Name:\t" + str(entry["name"]) + "\n"
+                content += "# Desc:\t" + str(entry["description"]) + "\n"
+                content += "# Type:\t" + str(entry["type"]) + "\n"
+                if entry['min'] or entry['max']:
+                    content += "# [min,max]:\t[" + str(entry["min"]) + "/" + str(entry["max"]) + "]" + "\n"
+                if entry["global_scope"]:
+                    content += "# Lives in global namespace!\n"
+                if entry["default"] is not None:
+                    content += str(entry["name"]) + ": " + str(entry["default"]) + "\n"
+                else:
+                    content += str(entry["name"]) + ": \n"
+
+        yaml_file = os.path.join(os.getcwd(), self.classname + "Parameters.yaml")
+
+        with open(yaml_file, 'w') as f:
             f.write(content)
 
     def _get_parameters(self):
@@ -524,3 +604,10 @@ class ParameterGenerator(object):
         else:
             # Pray and hope that it is a string
             return bool(param)
+
+
+# Create derived class for yaml generation
+class YamlGenerator(ParameterGenerator):
+    def _generateImpl(self):
+        self._generateyml()
+        return 0
