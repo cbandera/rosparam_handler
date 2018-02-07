@@ -2,8 +2,8 @@
 Changelog for package rosparam_handler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2018-02-07)
+------------------
   Release 0.1.2
   fix `#34 <https://github.com/artivis/rosparam_handler/issues/34>`_. Append local path at the beginning of PYTHON_PATH
   Update maintainer
