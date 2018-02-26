@@ -31,7 +31,7 @@ install(
 )
 
 install(
-        DIRECTORY include/rosparam_handler
+        DIRECTORY include/rosparam_handler/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
