@@ -2,8 +2,8 @@
 Changelog for package rosparam_handler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2018-03-23)
+------------------
 * Merge pull request `#50 <https://github.com/cbandera/rosparam_handler/issues/50>`_ from cbandera/develop
   Use industrial_ci & docker
 * Merge pull request `#45 <https://github.com/cbandera/rosparam_handler/issues/45>`_ from cbandera/feature/travis_industrial_ci
