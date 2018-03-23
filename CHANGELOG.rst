@@ -2,6 +2,26 @@
 Changelog for package rosparam_handler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#50 <https://github.com/cbandera/rosparam_handler/issues/50>`_ from cbandera/develop
+  Use industrial_ci & docker
+* Merge pull request `#45 <https://github.com/cbandera/rosparam_handler/issues/45>`_ from cbandera/feature/travis_industrial_ci
+  Change travis conf to use industrial_ci & docker
+* Merge pull request `#48 <https://github.com/cbandera/rosparam_handler/issues/48>`_ from cbandera/develop
+  Fix install rule
+* Merge branch 'develop' into feature/travis_industrial_ci
+* Merge pull request `#46 <https://github.com/cbandera/rosparam_handler/issues/46>`_ from plusone-robotics/plusone/master
+  Fix CI Breaking on External Projects
+* Merge pull request `#3 <https://github.com/cbandera/rosparam_handler/issues/3>`_ from geoffreychiou/gc_fix_ci
+  Fixed CI Build Error Caused by rosparam_handler
+* added slash at end of include dir
+* Merge branch 'develop' into feature/travis_industrial_ci
+* change travis conf to use industrial_ci & docker
+  - using industrial_ci simplifies a lot the travis conf file
+  - using Docker enables CI for kinetic & lunar
+* Contributors: Claudio Bandera, Geoffrey Chiou, Jeremie Deray, geoffreychiou
+
 0.1.2 (2018-02-07)
 ------------------
   Release 0.1.2
