@@ -151,7 +151,7 @@ inline bool getParam(const std::string key, T& val) {
 /// \param defaultValue Parameter default value
 template <typename T>
 inline bool getParam(const std::string key, T& val, const T& defaultValue) {
-    if (!ros::param::has(key) && !ros::param::get(key, val)) {
+    if (!ros::param::has(key) || !ros::param::get(key, val)) {
         val = defaultValue;
         ros::param::set(key, defaultValue);
         ROS_INFO_STREAM("Setting default value for parameter '" << key << "'.");
