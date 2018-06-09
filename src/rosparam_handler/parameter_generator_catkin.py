@@ -407,17 +407,21 @@ class ParameterGenerator(object):
 
             # Test for default value
             if param["default"] is None:
+                value = ""
                 default = ""
                 non_default_params.append(Template('      << "\t" << $namespace << "$name" << " ($type) '
                                                    '\\n"\n').substitute(
                     namespace=namespace, name=name, type=param["type"]))
             else:
                 if param['is_vector']:
-                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvaluelist(param, "default") + "}")
+                    value = ' = {}'.format("{" + self._get_cvaluelist(param, "default") + "}")
+                    default = ', ' + name
                 elif param['is_map']:
-                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvaluedict(param, "default") + "}")
+                    value = ' = {}'.format("{" + self._get_cvaluedict(param, "default") + "}")
+                    default = ', ' + name
                 else:
-                    default = ', {}'.format(str(param['type']) + "{" + self._get_cvalue(param, "default") + "}")
+                    value = ' = {}'.format(self._get_cvalue(param, "default"))
+                    default = ', ' + name
 
             # Test for constant value
             if param['constant']:
@@ -427,8 +431,8 @@ class ParameterGenerator(object):
                                                                default=self._get_cvalue(param, "default")))
                 from_server.append(Template('    rosparam_handler::testConstParam($paramname);').substitute(paramname=full_name))
             else:
-                param_entries.append(Template('  ${type} ${name}; /*!< ${description} */').substitute(
-                    type=param['type'], name=name, description=param['description']))
+                param_entries.append(Template('  ${type} ${name}${value}; /*!< ${description} */').substitute(
+                    type=param['type'], name=name, value=value, description=param['description']))
                 copy_constructor_entries.append(Template(' , ${name}(o.${name})').substitute(name=name))
                 assignment_operator_entries.append(Template('  ${name} = o.${name};').substitute(name=name))
                 from_server.append(Template('    success &= rosparam_handler::getParam($paramname, $name$default);').substitute(
