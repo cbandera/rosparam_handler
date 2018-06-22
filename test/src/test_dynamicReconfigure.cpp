@@ -27,6 +27,11 @@ public:
     testParams.fromConfig(config);
   }
 
+  void rosparamToConfig(ConfigType& config)
+  {
+    testParams.toConfig(config);
+  }
+
   ros::NodeHandle nh;
 
   ParamType testParams;
@@ -94,4 +99,16 @@ TEST_F(TestDynamicReconfigure, DynamicReconf)
   EXPECT_DOUBLE_EQ(2.2, testParams.double_param_w_default);
   EXPECT_EQ("Foo Bar", testParams.str_param_w_default);
   EXPECT_FALSE(testParams.bool_param_w_default);
+}
+
+TEST_F(TestDynamicReconfigure, ToDynamicReconf)
+{
+  ConfigType config;
+
+  rosparamToConfig(config);
+
+  EXPECT_EQ(testParams.int_param_w_default, config.int_param_w_default);
+  EXPECT_DOUBLE_EQ(testParams.double_param_w_default, config.double_param_w_default);
+  EXPECT_EQ(testParams.str_param_w_default, config.str_param_w_default);
+  EXPECT_FALSE(config.bool_param_w_default);
 }
