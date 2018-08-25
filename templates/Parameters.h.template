@@ -62,6 +62,15 @@ $fromConfig
 #endif
   }
 
+  void toConfig(Config& config){
+#ifdef DYNAMIC_RECONFIGURE_FOUND
+    $toConfig
+#else
+      ROS_FATAL_STREAM("dynamic_reconfigure was not found during compilation. So toConfig() is not available. Please recompile with dynamic_reconfigure.");
+      rosparam_handler::exit("dynamic_reconfigure was not found during compilation. So toConfig() is not available. Please recompile with dynamic_reconfigure.");
+#endif
+  }
+
   /// \brief Stream operator for printing parameter struct
   friend std::ostream& operator<<(std::ostream& os, const ${ClassName}Parameters& p)
   {
