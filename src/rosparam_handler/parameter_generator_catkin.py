@@ -453,8 +453,12 @@ class ParameterGenerator(object):
                     paramname=full_name, name=name, max=param['max'], type=ttype))
 
             # Add debug output
-            string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
-                                                  '"\\n"\n').substitute(namespace=namespace, name=name))
+            if param['is_vector'] or param['is_map']:
+                string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << rosparam_handler::to_string(p.$name) << '
+                                                      '"\\n"\n').substitute(namespace=namespace, name=name))
+            else:
+                string_representation.append(Template('      << "\t" << p.$namespace << "$name:" << p.$name << '
+                                                      '"\\n"\n').substitute(namespace=namespace, name=name))
 
         param_entries = "\n".join(param_entries)
         string_representation = "".join(string_representation)
