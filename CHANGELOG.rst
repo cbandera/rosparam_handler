@@ -2,8 +2,8 @@
 Changelog for package rosparam_handler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.4 (2018-09-02)
+------------------
 * update doc
 * fix `#57 <https://github.com/cbandera/rosparam_handler/issues/57>`_
   replace map/vec custom stream op by func
