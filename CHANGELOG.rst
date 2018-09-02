@@ -2,6 +2,17 @@
 Changelog for package rosparam_handler
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.4 (2018-09-02)
+------------------
+* update doc
+* fix `#57 <https://github.com/cbandera/rosparam_handler/issues/57>`_
+  replace map/vec custom stream op by func
+* update readme
+* add toConfig
+* Fix `#47 <https://github.com/cbandera/rosparam_handler/issues/47>`_
+  Do not print error message while retrieving param with default value.
+* Contributors: Jeremie Deray, artivis
+
 0.1.3 (2018-03-23)
 ------------------
 * Merge pull request `#50 <https://github.com/cbandera/rosparam_handler/issues/50>`_ from cbandera/develop
