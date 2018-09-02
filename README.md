@@ -19,15 +19,15 @@ When working with ROS and Parameters, there are a couple of tools to help you wi
 But with the multitude of options on where to specify your parameters, we often face the problem that we get a redundancy in our code and config files.
 
 The `rosparam_handler` let's you:
-- specify all of your parameters in a single file
-- use a generated struct to hold your parameters
-- use member method for grabbing the parameters from the parameter server
+- specify all of your parameters in a single file.
+- use a generated struct to hold your parameters.
+- use member method for grabbing the parameters from the parameter server.
 - use member method for updating them from dynamic_reconfigure.
 - make your parameters configurable with a single flag.
-- set default, min and max values
-- choose between global and private namespace
+- set default, min and max values.
+- choose between global and private namespace.
 - save a lot of time on specifying your parameters in several places.
-- ...in both C++ and Python
+- ...in both C++ and Python !
 
 ## Usage
 See the Tutorials on
@@ -36,19 +36,20 @@ See the Tutorials on
 - [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)
 
 ## Installation
-`rosparam_handler` has been released in version `0.1.1` for 
+`rosparam_handler` has been released in version `0.1.3` for
 - indigo
-- jade
+- jade (EOL - version `0.1.1`)
 - kinetic
+- lunar
 
 To get the package run
 `rosdep update && rosdep install rosparam_handler`
 
 ## Contribution
 `rosparam_handler` is developed according to Vincent Driessen's [Gitflow Workflow](http://nvie.com/posts/a-successful-git-branching-model/).
-This means, 
-- the master branch is for releases only. 
-- development is done on feature branches
+This means,
+- the master branch is for releases only.
+- development is done on feature branches.
 - finished features are integrated via PullRequests into develop.
 
 For a PullRequest to get merged into develop, it must pass
@@ -63,6 +64,6 @@ For a PullRequest to get merged into develop, it must pass
 ## Credits
 This project uses Open Source components. The code was, in large parts, built upon such existing open source software. You can find the source code of their projects along with license information below. We acknowledge and are grateful to these developers for their contributions to open source.
 
-Project: [dynamic_reconfigure](https://github.com/ros/dynamic_reconfigure)  
-Copyright 2015, Open Source Robotics Foundation, Inc.  
+Project: [dynamic_reconfigure](https://github.com/ros/dynamic_reconfigure)
+Copyright 2015, Open Source Robotics Foundation, Inc.
 License: [3-Clause BSD](https://github.com/ros/dynamic_reconfigure/blob/master/src/dynamic_reconfigure/parameter_generator_catkin.py)

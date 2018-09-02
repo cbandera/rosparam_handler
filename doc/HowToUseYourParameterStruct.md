@@ -52,6 +52,17 @@ void reconfigureRequest(TutorialConfig& config, uint32_t level) {
 ```
 This will update all values that were specified as configurable. At the same time, it assures that all dynamic_reconfigure parameters live in the same namespace as those on the parameter server to avoid problems with redundant parameters.
 
+Conversely, you can update the parameter on the dynamic_reconfigure server so that it
+better reflects the state of your node:
+```cpp
+TutorialConfig config;
+params_.toConfig(config);
+
+dyn_reconf_mut_.lock();
+dyn_reconf_srv_.updateConfig(config);
+dyn_reconf_mut_.unlock();
+```
+
 You can find a running version of this example code in the [rosparam_handler_tutorial](https://github.com/cbandera/rosparam_handler_tutorial)-Repository
 
 ## Setting parameters on the server

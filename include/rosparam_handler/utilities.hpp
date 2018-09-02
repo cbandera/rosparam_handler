@@ -15,29 +15,33 @@ template <typename T>
 using is_map = std::is_same<
     T, std::map<typename T::key_type, typename T::mapped_type, typename T::key_compare, typename T::allocator_type>>;
 
-/// \brief Outstream helper for std:vector
-template <typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {
-    if (!v.empty()) {
-        out << '[';
-        std::copy(v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
-        out << "\b\b]";
-    }
-    return out;
-}
-
-/// \brief Outstream helper for std:map
-template <typename T1, typename T2>
-std::ostream& operator<<(std::ostream& stream, const std::map<T1, T2>& map) {
-    stream << '{';
-    for (typename std::map<T1, T2>::const_iterator it = map.begin(); it != map.end(); ++it) {
-        stream << (*it).first << " --> " << (*it).second << ", ";
-    }
-    stream << '}';
-    return stream;
-}
-
 namespace rosparam_handler {
+
+template <typename T>
+inline std::string to_string(const std::vector<T>& v)
+{
+  std::string s;
+  if (!v.empty()) {
+      std::stringstream ss;
+      ss << '[';
+      std::copy(v.begin(), v.end(), std::ostream_iterator<T>(ss, ", "));
+      ss << "\b\b]";
+      s = ss.str();
+  }
+  return s;
+}
+
+template <typename... T>
+inline std::string to_string(const std::map<T...>& map)
+{
+  std::stringstream ss;
+  ss << '{';
+  for (typename std::map<T...>::const_iterator it = map.begin(); it != map.end(); ++it) {
+      ss << (*it).first << " --> " << (*it).second << ", ";
+  }
+  ss << '}';
+  return ss.str();
+}
 
 /// \brief Sets the logger level according to a standardized parameter name 'verbosity'.
 ///
