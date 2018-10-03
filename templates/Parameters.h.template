@@ -14,7 +14,10 @@
 #ifdef DYNAMIC_RECONFIGURE_FOUND
 #include <${pkgname}/${ClassName}Config.h>
 #else
-struct ${ClassName}Config{};
+namespace ${pkgname}
+{
+    struct ${ClassName}Config{};
+}
 #endif
 
 
